@@ -3,14 +3,15 @@
 import Image from "next/image";
 import LiveCompetition from "../components/LiveCompetition";
 
-import FootballHistory from "@/components/FootballHistory";
+import FootballHistory from "@/components/ExploreHistory";
 
-import Football1 from "@/components/FootballHistory1";
-import Football2 from "@/components/FootballHistory2";
+import Football1 from "@/components/FootballExample";
+import Football2 from "@/components/FootballHistory";
 import AIAssistant from "@/components/AIAssistant";
-
+import Records from "@/components/Records";
 import AIAssistant1 from "@/components/AIAssistant1";
-
+import SportsArticle from "@/components/SportsArticle";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -47,20 +48,27 @@ export default function Home() {
           />
         </div>
       </div>
-
-      <div className="w-full">
+<div className="w-full -mt-30">
+  <Football1 />
+</div>
+ <Football2 />
+ <div className="w-full">
         <LiveCompetition />
       </div>
+ <AIAssistant/>
+   <div className="w-full -mt-30">
+  <AIAssistant1/>
+  </div>
+      
       <div className="w-full mt-10 md:mt-20">
         <FootballHistory />
       </div>
 
       <LiveCompetition />
-        <Football1 />
-  <Football2 />
-  <AIAssistant/>
-  <AIAssistant1/>
-
+       
+<Records/>
+<SportsArticle/>
+<Footer/>
     </section>
   );
 }

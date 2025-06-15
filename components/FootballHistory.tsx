@@ -1,48 +1,49 @@
-"use client";
-
 import Image from "next/image";
-import { FaBolt, FaUser, FaTrophy } from 'react-icons/fa';
 
-export default function FootballHistory() {
+export default function FootballHistory2() {
   return (
-    <div className="relative w-full h-fit mb-10 bg-zinc-50 flex items-center justify-center">
-      <div className="absolute top-0 right-0">
-        <Image src="/Vector.png" alt="Vector" width={150} height={150} className="object-contain" />
-      </div>
-      <div className="text-center">
-        <p className="text-lime-500 text-sm md:text-base">Football History</p>
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mt-2">
-          Everything You Need To Explore <br /> Football History
-        </h1>
-        <div className="mt-8 flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-6">
-          <div className="bg-white p-4 pt-10 rounded-3xl shadow-lg w-64 h-64 flex flex-col items-center gap-6">
-            <div className="bg-lime-500 rounded-full p-4">
-              <FaBolt className="text-black text-2xl" />
+    <div className=" bg-white flex  justify-center m-0 p-0 pt-8 px-4">
+      <div className="flex flex-col items-center w-full max-w-5xl">
+
+        <h2 className="text-2xl md:text-2xl font-semibold text-[#0f172a] text-center w-full mb-8">
+          Try these examples:
+        </h2>
+
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-center gap-12 w-full">
+          
+          <div className="flex flex-col space-y-4 items-center md:items-start w-full max-w-xs">
+            <div className="flex flex-col gap-2 w-full">
+              {Array(3).fill("“Which country won the 2018 World Cup?”").map((text, i) => (
+                <div
+                  key={i}
+                  className="border border-lime-500 px-2 py-2 rounded-full text-[#0f172a] text-sm md:text-base font-medium text-center"
+                >
+                  {text}
+                </div>
+              ))}
             </div>
-            <p className="text-gray-800 font-medium">Instant AI Answers</p>
-            <p className="text-gray-600 text-sm w-[60%]">Engrossed listening. Park gate sell they west hard for the.</p>
-      
+
+            <button
+  className="bg-lime-400 hover:bg-lime-500 text-black font-semibold px-4 py-2.5 rounded-md shadow-md uppercase text-sm tracking-wider transition 
+             w-full md:w-auto self-center md:self-start md:ml-4"
+>
+  Start Asking Questions
+</button>
+
           </div>
-          <div className="bg-white p-4 pt-10 rounded-3xl shadow-lg w-64 h-64 flex flex-col items-center gap-6">
-            <div className="bg-lime-500 rounded-full p-4">
-              <FaUser className="text-black text-2xl" />
-            </div>
-            <p className="text-gray-800 font-medium">Instant AI Answers</p>
-            <p className="text-gray-600 text-sm w-[60%]">Engrossed listening. Park gate sell they west hard for the.</p>
-          </div>
-          <div className="bg-white p-4 pt-10 rounded-3xl shadow-lg w-64 h-64 flex flex-col items-center gap-6">
-            <div className="bg-lime-500 rounded-full p-4">
-              <FaTrophy className="text-black text-2xl" />
-            </div>
-            <p className="text-gray-800 font-medium">Instant AI Answers</p>
-            <p className="text-gray-600 text-sm w-[60%]">Engrossed listening. Park gate sell they west hard for the.</p>
-          </div>
-        </div>
-        <div className="mt-8">
-          <p className="text-neutral-500 text-sm md:text-base">Ask Anything About Football History</p>
-          <button className="mt-2 bg-lime-500 text-black text-sm font-bold px-6 py-3 cursor-pointer rounded-lg hover:bg-lime-400 transition duration-300">
-            EXPLORE HISTORY
-          </button>
+
+          {/* Right Side */}
+         <div className="flex justify-center items-center">
+  <div className="relative w-60 h-60 sm:w-80 sm:h-80 md:w-60 md:h-60 flex items-center justify-center">
+    <Image
+      src="/images/image1.png"
+      alt="Brain Icon"
+      fill
+      className="rounded-full object-cover"
+    />
+  </div>
+</div>
+
         </div>
       </div>
     </div>
