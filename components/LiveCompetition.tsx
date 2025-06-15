@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function LiveCompetition() {
     return (
-        <div className="w-full flex items-center justify-center pb-10 md:pb-20 bg-white">
+        <div className="w-full flex items-center  justify-center  bg-zinc-50">
             <div className="relative w-full md:w-[90%] pt-5 pb-5 bg-gray-900 text-white flex items-center justify-center flex-col text-center ">
                 <div className="relative w-full">
                     <div className="absolute top-0 right-0 hidden md:block">
@@ -36,7 +36,7 @@ export default function LiveCompetition() {
                             <p className="text-white font-bold text-xs md:text-base">$50</p>
                         </div>
                     </div>
-                    <div className="flex items-center space-x-2 md:space-x-4 lg:space-x-34">
+                    <div className="flex flex-col gap-5 items-center space-x-2 md:space-x-4 md:flex-row lg:space-x-34">
                         <div className="flex flex-col gap-1 md:gap-2">
                             <p className="font-bold text-xs md:text-base">Ends in:</p>
                             <div className="flex gap-1 md:gap-5">

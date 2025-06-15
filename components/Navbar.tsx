@@ -8,7 +8,7 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-24 py-4">
+    <nav className="absolute top-0 left-0 w-full z-50 flex items-center justify-between px-24 py-4">
       <div className="flex items-center">
         <Image src="/logo.png" alt="Logo" width={40} height={40} className="mr-1" />
         <span className="text-lime-400 font-bold">Kick<span className="text-black">Expert</span></span>

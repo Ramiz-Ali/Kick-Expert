@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import LiveCompetition from "../components/LiveCompetition";
+import FootballHistory from "@/components/FootballHistory";
 
 export default function Home() {
   return (
-    <section>
-      <div className="relative w-full h-screen bg-white">
+    <section className="bg-zinc-50 h-fit">
+      <div className="relative w-full h-[70vh] md:h-screen bg-zinc-50">
         <div className="relative z-10 flex items-center justify-center h-full flex-col text-center px-4">
           <h1 className="text-lime-400 text-xl md:text-2xl font-semibold">Kick <span className="text-black">Expert</span></h1>
           <h2 className="text-4xl md:text-6xl font-extrabold mt-2 bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text">
@@ -38,7 +39,12 @@ export default function Home() {
           />
         </div>
       </div>
-      <LiveCompetition />
+      <div className="w-full">
+        <LiveCompetition />
+      </div>
+      <div className="w-full mt-10 md:mt-20">
+        <FootballHistory />
+      </div>
     </section>
   );
 }
