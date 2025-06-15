@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import LiveCompetition from "../components/LiveCompetition";
+
 import FootballHistory from "@/components/FootballHistory";
+
+import Football1 from "@/components/FootballHistory1";
+import Football2 from "@/components/FootballHistory2";
+import AIAssistant from "@/components/AIAssistant";
+
+import AIAssistant1 from "@/components/AIAssistant1";
+
 
 export default function Home() {
   return (
@@ -39,12 +47,20 @@ export default function Home() {
           />
         </div>
       </div>
+
       <div className="w-full">
         <LiveCompetition />
       </div>
       <div className="w-full mt-10 md:mt-20">
         <FootballHistory />
       </div>
+
+      <LiveCompetition />
+        <Football1 />
+  <Football2 />
+  <AIAssistant/>
+  <AIAssistant1/>
+
     </section>
   );
 }
