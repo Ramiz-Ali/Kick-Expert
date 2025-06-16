@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 
 import Image from "next/image";
 import LiveCompetition from "../components/LiveCompetition";
@@ -22,6 +23,18 @@ export default function Home() {
           <h2 className="text-4xl md:text-6xl font-extrabold mt-2 bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text">
             Ask Anything <br /> About Football History
           </h2>
+           <Link href="/about" className="text-blue-500 underline">
+        about
+      </Link>
+       <Link href="/contact" className="text-blue-500 underline">
+     contact   
+      </Link>
+      <Link href="/policy" className="text-blue-500 underline">
+     policy   
+      </Link>
+      <Link href="/personaldata" className="text-blue-500 underline">
+        personaldata
+      </Link>
           <p className="text-neutral-700 mt-4 font-bold text-sm md:text-base max-w-md">
             Get instant AI-powered answers about players, matches, goals, and tournaments from international football history.
           </p>
