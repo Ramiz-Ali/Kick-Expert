@@ -1,16 +1,14 @@
 "use client";
-import Link from 'next/link';
+import Link from "next/link";
 
 import Image from "next/image";
 import LiveCompetition from "../components/LiveCompetition";
-
-import FootballHistory from "@/components/ExploreHistory";
-
-import Football1 from "@/components/FootballExample";
-import Football2 from "@/components/FootballHistory";
+import ExploreHistory from "@/components/ExploreHistory";
+import FootballExample from "@/components/FootballExample";
+import FootballHistory from "@/components/FootballHistory";
 import AIAssistant from "@/components/AIAssistant";
 import Records from "@/components/Records";
-import AIAssistant1 from "@/components/AIAssistant1";
+import FootballAssistant from "@/components/FootballAssistant";
 import SportsArticle from "@/components/SportsArticle";
 import Footer from "@/components/Footer";
 
@@ -19,24 +17,27 @@ export default function Home() {
     <section className="bg-zinc-50 h-fit">
       <div className="relative w-full h-[70vh] md:h-screen bg-zinc-50">
         <div className="relative z-10 flex items-center justify-center h-full flex-col text-center px-4">
-          <h1 className="text-lime-400 text-xl md:text-2xl font-semibold">Kick <span className="text-black">Expert</span></h1>
+          <h1 className="text-lime-400 text-xl md:text-2xl font-semibold">
+            Kick <span className="text-black">Expert</span>
+          </h1>
           <h2 className="text-4xl md:text-6xl font-extrabold mt-2 bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text">
             Ask Anything <br /> About Football History
           </h2>
-           <Link href="/about" className="text-blue-500 underline">
-        about
-      </Link>
-       <Link href="/contact" className="text-blue-500 underline">
-     contact   
-      </Link>
-      <Link href="/policy" className="text-blue-500 underline">
-     policy   
-      </Link>
-      <Link href="/personaldata" className="text-blue-500 underline">
-        personaldata
-      </Link>
+          <Link href="/about" className="text-blue-500 underline">
+            about
+          </Link>
+          <Link href="/contact" className="text-blue-500 underline">
+            contact
+          </Link>
+          <Link href="/policy" className="text-blue-500 underline">
+            policy
+          </Link>
+          <Link href="/personaldata" className="text-blue-500 underline">
+            personaldata
+          </Link>
           <p className="text-neutral-700 mt-4 font-bold text-sm md:text-base max-w-md">
-            Get instant AI-powered answers about players, matches, goals, and tournaments from international football history.
+            Get instant AI-powered answers about players, matches, goals, and
+            tournaments from international football history.
           </p>
           <button className="mt-6 bg-lime-400 text-black font-bold text-sm md:text-base px-6 py-2 md:py-3 rounded-full hover:bg-lime-500 transition duration-300 cursor-pointer">
             START ASKING QUESTIONS
@@ -61,27 +62,25 @@ export default function Home() {
           />
         </div>
       </div>
-<div className="w-full -mt-30">
-  <Football1 />
-</div>
- <Football2 />
- <div className="w-full">
+      <div className="w-full -mt-30">
+        <FootballExample />
+      </div>
+      <FootballHistory />
+      <div className="w-full">
         <LiveCompetition />
       </div>
- <AIAssistant/>
-   <div className="w-full -mt-30">
-  <AIAssistant1/>
-  </div>
-      
-      <div className="w-full mt-10 md:mt-20">
-        <FootballHistory />
+  
+      <div className="w-full -mt-30">
+            <AIAssistant />
+      <FootballAssistant />
+      <ExploreHistory />
+        <Records />
       </div>
 
-      <LiveCompetition />
-       
-<Records/>
-<SportsArticle/>
-<Footer/>
+      <div className="w-full mt-10 md:mt-20"></div>
+      <SportsArticle />
+
+      <Footer />
     </section>
   );
 }
