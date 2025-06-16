@@ -55,7 +55,6 @@ export default function Home() {
         <FootballHistory />
       </div>
 
-      <LiveCompetition />
         <Football1 />
   <Football2 />
   <AIAssistant/>
