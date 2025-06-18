@@ -39,7 +39,7 @@ export default function ChatAssistant() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col items-center justify-center bg-stone-50 px-4 py-8 min-h-screen">
+    <div id="chat-assistant" className="flex flex-col items-center justify-center bg-stone-50 px-4 py-8 min-h-screen">
       <div className="relative w-full max-w-3xl rounded-2xl shadow-lg bg-gradient-to-b from-white via-green-100 to-lime-300 p-4 sm:p-6 md:p-8 overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 opacity-20">
           <Image

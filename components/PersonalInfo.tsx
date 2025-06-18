@@ -72,7 +72,7 @@ export default function PersonalInfo() {
   }
 
   return (
-    <section className="min-h-screen bg-gray-50 py-12 sm:py-16 lg:py-8  ">
+    <section className="min-h-screen bg-gray-50 py-12 mt-16 sm:py-16 lg:py-8  ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Sidebar */}
