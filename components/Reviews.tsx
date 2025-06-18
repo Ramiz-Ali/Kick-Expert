@@ -55,14 +55,14 @@ export default function CustomerReviews() {
         </div>
 
         {/* Newsletter Subscription Section */}
-        <div className="bg-lime-100 rounded-lg p-6 sm:p-8 lg:p-10">
+        <div className="bg-lime-10 rounded-lg p-6 sm:p-8 lg:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
             {/* Left side - Newsletter signup */}
             <div>
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6">
-                <span className="text-gray-800">NEWSLETTER</span>
+                <span className="bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text">NEWSLETTER</span>
                 <br />
-                <span className="text-lime-600">SUBSCRIPTION</span>
+                <span className="bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text">SUBSCRIPTION</span>
               </h3>
 
               <div className="flex">
@@ -71,7 +71,7 @@ export default function CustomerReviews() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="shavon.khan0099@gmail.com"
-                  className="flex-1 px-4 py-3 text-sm sm:text-base border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-lime-500"
+                  className="flex-1 px-2 py-3 text-sm sm:text-base border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-lime-500"
                 />
                 <button className="px-4 py-3 bg-gray-800 text-white rounded-r-md hover:bg-gray-900">
                   <ArrowRight className="w-5 h-5" />

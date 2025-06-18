@@ -8,9 +8,17 @@ export default function AboutSection() {
         {/* About Us Header */}
         <div className="text-center mb-12 sm:mb-16">
           <div className="relative inline-block">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-800 mb-4">ABOUT US</h2>
+            <h2 className="text-6xl md:text-8xl font-extrabold mt-2 bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text">ABOUT US</h2>
             {/* Green underline accent */}
-            <div className="absolute -bottom-2 left-0 right-0 h-1 bg-lime-400 rounded-full"></div>
+              <div className="flex justify-center mt-2">
+    <Image
+      src="/images/image13.png"
+      alt="About Banner"
+      width={800}
+      height={80}
+      className="object-contain"
+    />
+  </div>
           </div>
 
           <p className="mt-8 text-lg sm:text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">

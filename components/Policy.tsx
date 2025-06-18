@@ -1,8 +1,8 @@
 import Image from "next/image"
 
-export default function TermsHeader() {
+export default function Policy() {
   return (
-    <section className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden mt-8 sm:mt-12 lg:mt-16">
+    <section className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image src="/images/image10.png" alt="Terms and Conditions Background" fill className="object-cover" priority />
