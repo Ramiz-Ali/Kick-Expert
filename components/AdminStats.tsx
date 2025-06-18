@@ -47,7 +47,7 @@ export default function AdminStats() {
         >
           <div className="flex justify-between items-start">
             <div className="flex-1 min-w-0">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 truncate">{stat.value}</h2>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-930 truncate">{stat.value}</h2>
               <p className="text-gray-600 text-xs sm:text-sm mt-1 truncate">{stat.label}</p>
             </div>
             <div className="bg-gray-50 p-2 sm:p-3 rounded-lg flex-shrink-0 ml-3">{stat.icon}</div>
