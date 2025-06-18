@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 
 import Image from "next/image";
 import LiveCompetition from "../components/LiveCompetition";
@@ -55,7 +54,7 @@ export default function Home() {
         <FootballExample />
       </div>
       <FootballHistory />
-      <div className="w-full">
+      <div className="w-full" id="live-competition">
         <LiveCompetition />
       </div>
   

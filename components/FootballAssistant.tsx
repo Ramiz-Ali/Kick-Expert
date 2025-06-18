@@ -3,10 +3,10 @@ import { FaPaperPlane } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 
 export default function ChatAssistant() {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<{ text: string; sender: string }[]>([]);
   const [input, setInput] = useState("");
-  const [difficulty, setDifficulty] = useState("medium");
-  const chatContainerRef = useRef(null);
+
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSendMessage = () => {
     if (input.trim() === "") return;
@@ -25,11 +25,12 @@ export default function ChatAssistant() {
     setInput("");
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSendMessage();
-    }
-  };
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === "Enter") {
+    handleSendMessage();
+  }
+};
+
 
   useEffect(() => {
     if (chatContainerRef.current) {

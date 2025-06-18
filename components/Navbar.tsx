@@ -15,6 +15,12 @@ import Link from 'next/link';
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <nav className="bg-white w-full z-50 shadow-sm">
@@ -45,7 +51,7 @@ export default function Navbar() {
             </a>
           ))}
 
-          <button className="bg-lime-400 text-white px-4 py-2 rounded-full flex items-center shadow-lg">
+          <button onClick={() => scrollToSection('live-competition')} className="bg-lime-400 text-white px-4 py-2 rounded-full flex items-center shadow-lg">
             LIVE COMPETITION
             <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
               LIVE
@@ -149,7 +155,11 @@ export default function Navbar() {
             <FaBell className="text-lime-900 text-lg" />
           </div>
 
-          <button className="bg-lime-400 text-white px-4 py-2 rounded-full flex items-center shadow-lg">
+          <button
+            onClick={() => scrollToSection('live-competition')}
+            className="bg-lime-400 text-white px-4 py-2 rounded-full flex items-center shadow-lg"
+            aria-label="Scroll to live competition section"
+          >
             LIVE COMPETITION
             <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
               LIVE
