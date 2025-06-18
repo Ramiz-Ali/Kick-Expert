@@ -72,7 +72,7 @@ export default function PersonalInfo() {
   }
 
   return (
-    <section className="min-h-screen bg-gray-50 py-12 sm:py-16 lg:py-20 mt-8 sm:mt-12 lg:mt-16">
+    <section className="min-h-screen bg-gray-50 py-12 sm:py-16 lg:py-8  ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Sidebar */}
@@ -192,14 +192,14 @@ export default function PersonalInfo() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">TWITTER</label>
-                    <div className="flex space-x-2">
+                    <div className="flex flex-col gap-3 md:flex-row space-x-2">
                       <input
                         type="text"
                         value={formData.twitter}
                         onChange={(e) => handleInputChange("twitter", e.target.value)}
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent"
                       />
-                      <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium whitespace-nowrap">
+                      <button className="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium whitespace-nowrap">
                         Verify account
                       </button>
                     </div>
@@ -211,7 +211,7 @@ export default function PersonalInfo() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-6 border-t border-gray-200">
                 <button
                   onClick={handleUpdateProfile}
-                  className="bg-lime-500 hover:bg-lime-600 text-white px-6 py-2 rounded-lg font-medium mb-4 sm:mb-0 transition-colors"
+                  className="bg-lime-400 hover:bg-lime-500 text-white px-6 py-2 rounded-lg font-medium mb-4 sm:mb-0 transition-colors"
                 >
                   Update profile
                 </button>
