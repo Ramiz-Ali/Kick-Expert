@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function Policy() {
   return (
-    <section className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden">
+    <section className="relative w-full  mt-14  h-64 sm:h-80 lg:h-96 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image src="/images/image10.png" alt="Terms and Conditions Background" fill className="object-cover" priority />
