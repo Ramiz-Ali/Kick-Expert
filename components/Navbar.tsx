@@ -18,7 +18,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = (sectionId: string) => {
     // If not on homepage, navigate to homepage with hash
     if (pathname !== "/") {
       window.location.href = `/#${sectionId}`;
