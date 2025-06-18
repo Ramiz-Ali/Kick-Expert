@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function FootballHistory1() {
   return (
-<div className="bg-white flex flex-col items-center justify-center px-4 pt-28 pb-8">
+<div className="bg-white flex  flex-col items-center justify-center px-4 pt-28 pb-8">
  
       
       <div className="relative text-center mb-10">
@@ -24,7 +24,7 @@ export default function FootballHistory1() {
       </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10 w-full max-w-3xl">
-        <div className="w-full sm:w-1/3 border-2 border-[#C5FF66] rounded-xl p-6 text-center transition-all hover:scale-105 cursor-pointer">
+        <div className="w-full sm:w-1/3 border-2 border-[#C5FF66] rounded-xl p-6  text-center transition-all hover:scale-105 cursor-pointer">
           <div className="flex items-center justify-center gap-2 mb-2">
             <span className="text-[#8BC34A] text-xl">⚡</span>
             <h2 className="text-lg font-bold text-[#1f2937]">Easy</h2>
@@ -46,7 +46,7 @@ export default function FootballHistory1() {
         </div>
       </div>
 
-      <div className="w-full max-w-xl flex items-center border-2 border-gray-300 rounded-xl px-8 py-2 shadow-sm">
+      <div className="w-full max-w-3xl flex items-center border-2 border-gray-300 rounded-xl px-8 py-2 shadow-sm">
         <input
           type="text"
           placeholder="Ask any Football questions....."

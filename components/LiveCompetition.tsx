@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function LiveCompetition() {
     return (
         <div className="w-full flex items-center  justify-center  bg-zinc-50">
-            <div className="relative w-full md:w-[90%] pt-5 pb-5 bg-gray-900 text-white flex items-center justify-center flex-col text-center ">
+            <div className="relative w-full md:w-[90%] pt-5 pb-32 bg-gray-900 text-white flex items-center justify-center flex-col text-center ">
                 <div className="relative w-full">
                     <div className="absolute top-0 right-0 hidden md:block">
                         <Image

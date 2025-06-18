@@ -26,7 +26,7 @@ export default function QuizCard() {
       .map((option, index) => (
         <button
           key={index}
-          className="w-full border border-green-300 rounded-md px-6 py-3 text-gray-700 hover:bg-green-50 transition"
+          className="w-full border flex border-lime-400 rounded-md px-6 py-3 text-gray-700 hover:bg-lime-50 transition"
         >
           {option}
         </button>

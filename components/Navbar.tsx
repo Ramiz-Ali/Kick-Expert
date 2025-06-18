@@ -10,6 +10,7 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { MdMenu } from "react-icons/md"; // Hamburger icon
+import Link from 'next/link';
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -19,13 +20,14 @@ export default function Navbar() {
     <nav className="bg-white w-full z-50 shadow-sm">
       <div className="flex justify-between items-center px-6 py-4 md:px-10">
         {/* Logo */}
-        <div className="flex items-center">
-          <Image src="/logo.png" alt="Logo" width={40} height={40} />
-          <span className="ml-2 text-lime-400 font-bold text-lg">
-            Kick<span className="text-black">Expert</span>
-          </span>
-        </div>
-
+        <Link href="/" className="flex items-center">
+          <div className="flex items-center">
+            <Image src="/logo.png" alt="Logo" width={40} height={40} />
+            <span className="ml-2 text-lime-400 font-bold text-lg">
+              Kick<span className="text-black">Expert</span>
+            </span>
+          </div>
+        </Link>
         {/* Desktop Nav Links */}
         <div className="hidden lg:flex items-center gap-6">
           {[
@@ -94,14 +96,14 @@ export default function Navbar() {
                   <FaSignOutAlt className="mr-2 text-lime-400 text-lg" />
                   <p className="mt-[2px]">Logout</p>
                 </a>
-                 <a
+                <a
                   href="/personaldata"
                   className="px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center"
                 >
                   <p className="mt-[2px]">Update Profile</p>
                 </a>
 
-                 <a
+                <a
                   href="/contact"
                   className="px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center"
                 >
