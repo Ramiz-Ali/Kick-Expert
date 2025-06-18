@@ -4,7 +4,7 @@ import { useState } from "react";
 export default function AIQuestionAssistant() {
   const [selected, setSelected] = useState("Medium");
   return (
-    <div className="relative bg-stone-50 px-4 pt-12  md:pt-20 text-center overflow-hidden">
+    <div id="quiz-section" className="relative bg-stone-50 px-4 pt-12  md:pt-20 text-center overflow-hidden">
 
       <div className="absolute  sm:top-20 md:top-8 right-0   sm:right-80 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 z-40">
         <Image

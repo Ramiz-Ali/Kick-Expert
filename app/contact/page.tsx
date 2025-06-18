@@ -7,20 +7,33 @@ import FAQSection from "@/components/FAQSection";
 
 export default function Contact() {
   return (
-    <section className="bg-zinc-50 h-fit">
-        <div className="absolute inset-0 flex items-center md:flex">
-                <Image
-                  src="/footbal.png"
-                  alt="Football"
-                  width={400}
-                  height={400}
-                  className="object-cover grayscale-[20%] opacity-70 brightness-110"
-                />
-              </div>
-             
-<Map/>
-<FAQSection/>
-<Footer/>
-    </section>
+    <div className="relative bg-zinc-50  min-h-screen">
+      {/* Background Football Image - Fixed and behind content */}
+      <div className="fixed inset-0 -z-10 overflow-hidden opacity-20">
+        <Image
+          src="/footbal.png"
+          alt="Football background"
+          fill
+          className="object-cover grayscale-[20%] brightness-110"
+          priority
+        />
+      </div>
+
+      {/* Main Content */}
+      <main className="relative z-10">
+        {/* Map Section */}
+        <section className="pt-20 pb-10">
+          <Map />
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-10">
+          <FAQSection />
+        </section>
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 }

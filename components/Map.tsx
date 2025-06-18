@@ -12,7 +12,7 @@ export default function ContactSection() {
   })
 
   return (
-    <section className="py-8 sm:py-12 lg:py-16 bg-white mx-4 sm:mx-8 lg:mx-12 mt-8 sm:mt-12 lg:mt-16">
+    <section className="py-8 bg-white mx-4 ">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Left side - Contact Form */}
