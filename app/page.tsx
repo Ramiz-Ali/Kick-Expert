@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import LiveCompetition from "../components/LiveCompetition";
 import ExploreHistory from "@/components/ExploreHistory";
@@ -10,10 +11,25 @@ import Records from "@/components/Records";
 import FootballAssistant from "@/components/FootballAssistant";
 import SportsArticle from "@/components/SportsArticle";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
+  const pathname = usePathname();
+
+  const scrollToSection = (sectionId: string) => {
+    if (pathname !== "/") {
+      window.location.href = `/#${sectionId}`;
+      return;
+    }
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section className="bg-zinc-50 h-fit">
+      <Navbar />
       <div className="relative w-full h-[70vh] md:h-screen bg-zinc-50">
         <div className="relative z-10 flex items-center justify-center h-full flex-col text-center px-4">
           <h1 className="text-lime-400 text-xl md:text-2xl font-semibold">
@@ -27,7 +43,10 @@ export default function Home() {
             Get instant AI-powered answers about players, matches, goals, and
             tournaments from international football history.
           </p>
-          <button className="mt-6 bg-lime-400 text-black font-bold text-sm md:text-base px-6 py-2 md:py-3 rounded-full hover:bg-lime-500 transition duration-300 cursor-pointer">
+          <button 
+            onClick={() => scrollToSection("chat-assistant")} 
+            className="mt-6 bg-lime-500 text-black font-bold text-sm md:text-base px-6 py-2 md:py-3 rounded-full hover:bg-lime-400 transition duration-300 cursor-pointer"
+          >
             START ASKING QUESTIONS
           </button>
         </div>
@@ -59,9 +78,9 @@ export default function Home() {
       </div>
   
       <div className="w-full -mt-30">
-            <AIAssistant />
-      <FootballAssistant />
-      <ExploreHistory />
+        <AIAssistant />
+        <FootballAssistant />
+        <ExploreHistory />
         <Records />
       </div>
 

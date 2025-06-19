@@ -4,10 +4,12 @@ import Image from "next/image";
 import Map from "@/components/Map";
 import Footer from "@/components/Footer";
 import FAQSection from "@/components/FAQSection";
+import Navbar from "@/components/Navbar";
 
 export default function Contact() {
   return (
     <div className="relative bg-zinc-50  min-h-screen">
+      <Navbar/>
       {/* Background Football Image - Fixed and behind content */}
       <div className="fixed inset-0 -z-10 overflow-hidden opacity-20">
         <Image

@@ -8,10 +8,12 @@ import "swiper/css/pagination";
 import AskQuestion from "@/components/About";
 import Reviews from "@/components/Reviews";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export default function About() {
   return (
     <section className="bg-zinc-50 h-fit m-0 p-0 overflow-x-hidden">
+      <Navbar/>
       {/* About Section */}
       <div className="w-full m-0 p-0">
         <AskQuestion />
