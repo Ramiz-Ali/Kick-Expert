@@ -7,7 +7,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import toast, { Toaster } from 'react-hot-toast';
-import { FirestoreUser } from '@/lib/types'; // Adjust path as needed
+import { FirestoreUser } from '@/types/user';
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
