@@ -30,25 +30,9 @@ export default function Home() {
   return (
     <section className="bg-zinc-50 h-fit">
       <Navbar />
-      <div className="relative w-full h-[70vh] md:h-screen bg-zinc-50">
+      <div className="relative w-full md:h-full bg-zinc-50">
         <div className="relative z-10 flex items-center justify-center h-full flex-col text-center px-4">
-          <h1 className="text-lime-400 text-xl md:text-2xl font-semibold">
-            Kick <span className="text-black">Expert</span>
-          </h1>
-          <h2 className="text-4xl md:text-6xl font-extrabold mt-2 bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text">
-            Ask Anything <br /> About Football History
-          </h2>
-         
-          <p className="text-neutral-700 mt-4 font-bold text-sm md:text-base max-w-md">
-            Get instant AI-powered answers about players, matches, goals, and
-            tournaments from international football history.
-          </p>
-          <button 
-            onClick={() => scrollToSection("chat-assistant")} 
-            className="mt-6 bg-lime-500 text-black font-bold text-sm md:text-base px-6 py-2 md:py-3 rounded-full hover:bg-lime-400 transition duration-300 cursor-pointer"
-          >
-            START ASKING QUESTIONS
-          </button>
+          <FootballExample />
         </div>
         <div className="absolute inset-0 flex items-center md:flex">
           <Image
@@ -65,13 +49,11 @@ export default function Home() {
             alt="Decore"
             width={450}
             height={600}
-            className="object-contain grayscale-[60%]"
+            className="object-contain grayscale-[20%]"
           />
         </div>
       </div>
-      <div className="w-full -mt-30">
-        <FootballExample />
-      </div>
+
       <FootballHistory />
       <div className="w-full" id="live-competition">
         <LiveCompetition />
