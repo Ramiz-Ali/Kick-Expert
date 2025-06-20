@@ -15,7 +15,7 @@ export default function About() {
     <section className="bg-zinc-50 h-fit m-0 p-0 overflow-x-hidden">
       <Navbar/>
       {/* About Section */}
-      <div className="w-full m-0 p-0">
+      <div className="w-full mt-16 p-0">
         <AskQuestion />
       </div>
 

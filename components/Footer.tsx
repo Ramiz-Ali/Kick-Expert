@@ -1,87 +1,103 @@
-// components/Footer.js
+'use client';
+
 import { FaFacebookF, FaLinkedinIn, FaTwitter, FaInstagram } from 'react-icons/fa';
 import { IoGlobeOutline } from 'react-icons/io5';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#131c2b] text-white ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-5 gap-8 border-b border-gray-600 pb-10 text-center md:text-left">
-        
-        {/* Brand + Contact */}
-        <div className="space-y-4 flex flex-col items-center md:items-start">
-          <h2 className="text-white font-bold text-xl flex items-center gap-1">
-            <span className="text-lime-400">●</span> Kick<span className="text-white">Expert</span>
-          </h2>
-          <h3 className="text-lime-400 font-semibold">Contact us</h3>
-          <p className="text-sm">sweetdeli@gmail.com</p>
-          <p className="text-sm">+1-2345-6789</p>
-          <p className="text-sm">123 Ave, New York, USA</p>
-          <div className="flex gap-4 pt-2 text-gray-300 justify-center md:justify-start">
-            <FaFacebookF className="hover:text-white cursor-pointer" />
-            <FaLinkedinIn className="hover:text-white cursor-pointer" />
-            <FaTwitter className="hover:text-white cursor-pointer" />
-            <FaInstagram className="hover:text-white cursor-pointer" />
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 text-center md:text-left md:grid-cols-4 gap-8 pb-10 border-b border-gray-700">
+          {/* Brand + Contact */}
+          <div className="space-y-6 flex flex-col items-center md:items-start">
+            <Link href="/" className="flex items-center">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                <span className="text-lime-400">●</span> Kick<span className="text-white">Expert</span>
+              </h2>
+            </Link>
+            <div className="space-y-3 text-gray-300 text-sm">
+              <h3 className="text-lime-400 font-semibold text-lg">Contact Us</h3>
+              <p className="hover:text-lime-400 transition-colors cursor-pointer">sweetdeli@gmail.com</p>
+              <p className="hover:text-lime-400 transition-colors cursor-pointer">+1-2345-6789</p>
+              <p className="hover:text-lime-400 transition-colors cursor-pointer">123 Ave, New York, USA</p>
+            </div>
+            <div className="flex gap-4 text-gray-300 text-lg">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-lime-400 transition-colors">
+                <FaFacebookF />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-lime-400 transition-colors">
+                <FaLinkedinIn />
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-lime-400 transition-colors">
+                <FaTwitter />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-lime-400 transition-colors">
+                <FaInstagram />
+              </a>
+            </div>
+          </div>
+
+          {/* Products */}
+          <div className="flex flex-col items-center md:items-start">
+            <h3 className="text-lg font-semibold text-white mb-4">Products</h3>
+            <ul className="space-y-3 text-gray-300 text-sm">
+              <li><Link href="#" className="hover:text-lime-400 transition-colors">Auctor volutpat</Link></li>
+              <li><Link href="#" className="hover:text-lime-400 transition-colors">Fermentum turpis</Link></li>
+              <li><Link href="#" className="hover:text-lime-400 transition-colors">Mi consequat</Link></li>
+              <li><Link href="#" className="hover:text-lime-400 transition-colors">Amet venenatis</Link></li>
+              <li><Link href="#" className="hover:text-lime-400 transition-colors">Convallis porttitor</Link></li>
+            </ul>
+          </div>
+
+          {/* About */}
+          <div className="flex flex-col items-center md:items-start">
+            <h3 className="text-lg font-semibold text-white mb-4">About</h3>
+            <ul className="space-y-3 text-gray-300 text-sm">
+              <li><Link href="/about" className="hover:text-lime-400 transition-colors">Egestas vitae</Link></li>
+              <li><Link href="/about" className="hover:text-lime-400 transition-colors">Viverra lorem ac</Link></li>
+              <li><Link href="/about" className="hover:text-lime-400 transition-colors">Eget ac tellus</Link></li>
+              <li><Link href="/about" className="hover:text-lime-400 transition-colors">Erat nulla</Link></li>
+              <li><Link href="/about" className="hover:text-lime-400 transition-colors">Vulputate proin</Link></li>
+            </ul>
+          </div>
+
+          {/* Get the App */}
+          <div className="flex flex-col items-center md:items-start">
+            <h3 className="text-lg font-semibold text-lime-400 mb-4">Get the App</h3>
+            <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <a href="https://www.apple.com/app-store/" target="_blank" rel="noopener noreferrer">
+                <Image 
+                  src="/images/image7.png"
+                  alt="App Store"
+                  width={140}
+                  height={48}
+                  className="rounded-lg hover:opacity-80 transition-opacity"
+                />
+              </a>
+              <a href="https://play.google.com/store" target="_blank" rel="noopener noreferrer">
+                <Image 
+                  src="/images/image8.png"
+                  alt="Google Play"
+                  width={140}
+                  height={48}
+                  className="rounded-lg hover:opacity-80 transition-opacity"
+                />
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Products */}
-        <div className="flex flex-col items-center md:items-start">
-          <h3 className="font-semibold mb-3">Products</h3>
-          <ul className="space-y-2 text-sm text-gray-300">
-            <li>Auctor volutpat.</li>
-            <li>Fermentum turpis.</li>
-            <li>Mi consequat.</li>
-            <li>Amet venenatis.</li>
-            <li>Convallis porttitor.</li>
-          </ul>
-        </div>
-
-        {/* About */}
-        <div className="flex flex-col items-center md:items-start">
-          <h3 className="font-semibold mb-3">About</h3>
-          <ul className="space-y-2 text-sm text-gray-300">
-            <li>Egestas vitae.</li>
-            <li>Viverra lorem ac.</li>
-            <li>Eget ac tellus.</li>
-            <li>Erat nulla.</li>
-            <li>Vulputate proin.</li>
-          </ul>
-        </div>
-
-        {/* Get the App */}
-        <div className="md:col-span-2 flex flex-col items-center md:items-start">
-          <h3 className="text-lime-400 font-semibold mb-3">Get the app</h3>
-          <div className="flex flex-col md:flex-row gap-6 items-center">
-            <div className="mb-2 md:mb-0">
-              <Image 
-                src="/images/image7.png"
-                alt="App Store"
-                width={120}
-                height={40}
-                className="rounded-lg"
-              />
-            </div>
-            <div>
-              <Image 
-                src="/images/image8.png"
-                alt="Google Play"
-                width={120}
-                height={40}
-                className="rounded-lg"
-              />
-            </div>
+        {/* Bottom Bar */}
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-sm text-gray-400">
+          <div className="flex items-center gap-3 mb-4 md:mb-0">
+            <IoGlobeOutline className="text-lg" />
+            <span>English</span>
           </div>
+          <div>Copyright © {new Date().getFullYear()}. All rights reserved.</div>
         </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="flex flex-col md:flex-row justify-between items-center px-4 sm:px-6 lg:px-8 py-4 text-sm text-gray-400 text-center md:text-left">
-        <div className="flex items-center gap-2 mb-2 md:mb-0 justify-center md:justify-start">
-          <IoGlobeOutline className="text-lg" />
-          <span>English</span>
-        </div>
-        <div>Copyright © 2020. All rights reserved.</div>
       </div>
     </footer>
   );

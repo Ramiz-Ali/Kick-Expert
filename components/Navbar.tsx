@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect , useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,6 +14,10 @@ import {
   FaUser,
   FaUserCircle,
   FaSignOutAlt,
+  FaInfoCircle,
+  FaShieldAlt,
+  FaEnvelope,
+  FaTimes ,
 } from "react-icons/fa";
 import { MdMenu, MdClose } from "react-icons/md";
 import toast from 'react-hot-toast';
@@ -80,6 +84,20 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const toggleSearch = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isOpen]);
+
   return (
     <nav className="bg-white w-full z-50 shadow-sm fixed top-0">
       <div className="flex justify-between items-center px-4 py-3 md:px-8 lg:px-10">
@@ -103,38 +121,19 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-6">
           <button
             onClick={() => scrollToSection("chat-assistant")}
-            className="text-gray-600 hover:text-lime-500 font-medium transition-colors"
+            className="text-gray-600 hover:text-lime-500 font-bold transition-colors"
           >
             Ask AI
           </button>
           <button
             onClick={() => scrollToSection("quiz-section")}
-            className="text-gray-600 hover:text-lime-500 font-medium transition-colors"
+            className="text-gray-600 hover:text-lime-500 font-bold transition-colors"
           >
             Quiz
           </button>
-          <Link
-            href="/about"
-            className="text-gray-600 hover:text-lime-500 font-medium transition-colors"
-          >
-            About
-          </Link>
-          <Link
-            href="/policy"
-            className="text-gray-600 hover:text-lime-500 font-medium transition-colors"
-          >
-            Policy
-          </Link>
-          <Link
-            href="/contact"
-            className="text-gray-600 hover:text-lime-500 font-medium transition-colors"
-          >
-            Contact
-          </Link>
-         
           <button
             onClick={() => scrollToSection("live-competition")}
-            className="bg-lime-400 hover:bg-lime-500 text-white px-4 py-2 rounded-full flex items-center shadow-lg transition-colors"
+            className="bg-lime-400 hover:bg-lime-500 text-white  px-4 py-2 rounded-full flex items-center shadow-lg transition-colors"
           >
             LIVE COMPETITION
             <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
@@ -145,12 +144,37 @@ export default function Navbar() {
 
         {/* Right Icons - Desktop */}
         <div className="hidden lg:flex items-center space-x-6">
-          <button 
-            className="text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors"
-            aria-label="Search"
-          >
-            <FaSearch />
-          </button>
+        <div className="relative flex">
+      {/* Search Bar - Positioned absolutely to the left */}
+      <div
+        className={`absolute right-8 top-[-10]  bg-white border border-gray-500 rounded-full overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "w-fit opacity-100" : " opacity-0"
+        }`}
+        style={{ transformOrigin: 'right center' }}
+      >
+        <div className="flex items-center px-4 py-2">
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search ..."
+            className="flex-grow outline-none text-gray-700 placeholder-gray-600 text-sm"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* Search Button - Fixed position */}
+      <button
+        onClick={toggleSearch}
+        className={`text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors z-10 ${
+          isOpen ? "text-lime-500" : ""
+        }`}
+        aria-label="Search"
+      >
+        <FaSearch />
+      </button>
+    </div>
           <button 
             className="text-gray-600 hover:text-lime-500 cursor-pointer text-lg transition-colors"
             aria-label="Notifications"
@@ -188,16 +212,15 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                   <Link
                     href="/profile"
-                    className="px-4 py-3 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaUserCircle className="mr-3 text-lime-500 text-lg" />
                     <span>Profile</span>
                   </Link>
-                  
                   <Link
                     href="/updateProfile"
-                    className="px-4 py-3 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
                     onClick={() => setDropdownOpen(false)}
                   >
                     <svg
@@ -216,24 +239,28 @@ export default function Navbar() {
                     <span>Update Profile</span>
                   </Link>
                   <Link
-                    href="/contact"
-                    className="px-4 py-3 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    href="/about"
+                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    <svg
-                      className="mr-3 text-lime-500 text-lg w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    <span>Contact Us</span>
+                    <FaInfoCircle className="mr-3 text-lime-500 text-lg" />
+                    <span>About</span>
+                  </Link>
+                  <Link
+                    href="/policy"
+                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    <FaShieldAlt className="mr-3 text-lime-500 text-lg" />
+                    <span>Policy</span>
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    <FaEnvelope className="mr-3  text-lime-500 text-lg" />
+                    <span>Contact</span>
                   </Link>
                   <button
                     className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center w-full text-left transition-colors"
@@ -287,29 +314,6 @@ export default function Navbar() {
             >
               Quiz
             </button>
-            <Link
-              href="/about"
-              className="block py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              About
-            </Link>
-            <Link
-              href="/policy"
-              className="block py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              Policy
-            </Link>
-            <Link
-              href="/contact"
-              className="block py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
-              onClick={() => setMenuOpen(false)}
-            >
-              Contact
-            </Link>
-            
-            {/* Mobile version of dropdown items */}
             {user && (
               <>
                 <Link
@@ -340,20 +344,35 @@ export default function Navbar() {
                   </svg> */}
                   <span>Update Profile</span>
                 </Link>
+                <Link
+                  href="/about"
+                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {/* <FaInfoCircle className="mr-3 text-lime-500 text-lg" /> */}
+                  <span>About</span>
+                </Link>
+                <Link
+                  href="/policy"
+                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {/* <FaShieldAlt className="mr-3 text-lime-500 text-lg" /> */}
+                  <span>Policy</span>
+                </Link>
+                <Link
+                  href="/contact"
+                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {/* <FaEnvelope className="mr-3 text-lime-500 text-lg" /> */}
+                  <span>Contact</span>
+                </Link>
               </>
             )}
           </div>
 
           <div className="px-4 py-3 border-t border-gray-200">
-            {/* <div className="flex items-center space-x-4 mb-3">
-              <button className="text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors">
-                <FaSearch />
-              </button>
-              <button className="text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors">
-                <FaBell />
-              </button>
-            </div> */}
-
             {user ? (
               <>
                 <div className="flex items-center justify-between py-2">

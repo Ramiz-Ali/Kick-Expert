@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function FootballHistory2() {
   return (
-    <div className=" bg-white  flex mb-10 justify-center m-0 p-0 pt-8 px-4">
+    <div className=" bg-stone-50  flex mb-10 justify-center m-0 p-0 pt-8 px-4">
       <div className="flex flex-col items-center   w-full max-w-5xl">
 
         <h2 className="text-2xl md:text-2xl font-semibold text-[#0f172a] text-center w-full mb-8">
@@ -13,7 +13,7 @@ export default function FootballHistory2() {
 
 
           <div className="flex items-center  justify-center">
-            <div className="flex flex-col space-y-4 items-center justify-center w-full max-w-xs p-4 bg-white rounded-lg">
+            <div className="flex flex-col space-y-4 items-center justify-center w-full max-w-xs p-4  rounded-lg">
               <div className="flex flex-col gap-4 w-full">
                 {Array(3)
                   .fill("“Which country won the 2018 World Cup?”")

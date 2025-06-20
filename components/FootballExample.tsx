@@ -70,14 +70,14 @@ export default function FootballAssistant() {
   }, [messages]);
 
   return (
-    <div className="bg-white flex flex-col items-center justify-center px-4 pt-20 pb-8 min-h-screen">
+    <div className="flex flex-col items-center justify-center px-4 pt-20 pb-8 md:pt-36 min-h-screen">
       {/* Header section */}
       <div className="relative text-center mb-10 w-full max-w-4xl">
-        <p className="text-lime-500 font-medium text-lg mb-2">Football History</p>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <p className="text-lime-600 font-bold text-xl mb-2">Football History</p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text  mb-4">
           Choose Your Knowledge Level
         </h1>
-        <p className="text-gray-500 max-w-2xl mx-auto text-sm sm:text-base">
+        <p className="text-lime-600 max-w-2xl mx-auto text-sm sm:text-base">
           Get tailored football history answers based on your expertise
         </p>
       </div>
@@ -90,7 +90,7 @@ export default function FootballAssistant() {
             className={`flex-1 border-2 rounded-xl p-4 sm:p-6 text-center transition-all cursor-pointer
               ${activeLevel === level 
                 ? "border-lime-500 bg-lime-100 shadow-md" 
-                : "border-gray-200 hover:border-lime-300"}`}
+                : "border-gray-400 hover:border-lime-300"}`}
             onClick={() => setActiveLevel(level)}
           >
             <div className="flex flex-col items-center">
@@ -114,13 +114,13 @@ export default function FootballAssistant() {
 
       {/* Upper Search Input - Hidden when chat section appears */}
       {messages.length === 0 && (
-        <div className="w-full max-w-2xl mb-4">
-          <div className="flex items-center border-2 border-gray-300 rounded-xl px-4 py-3 shadow-sm">
-            <FaSearch className="text-gray-400 mr-3" />
+        <div className="w-full  mb-4">
+          <div className="flex items-center border-2 border-gray-500 rounded-xl px-4 py-3 shadow-sm">
+            <FaSearch className="text-gray-700 mr-3" />
             <input
               type="text"
-              placeholder={`Ask a ${activeLevel} level football question...`}
-              className="flex-grow outline-none bg-transparent text-base text-gray-700 placeholder-gray-400"
+              placeholder={`Ask a ${activeLevel} level question...`}
+              className="flex-grow outline-none bg-transparent text-base text-gray-700 placeholder-gray-700"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -179,7 +179,7 @@ export default function FootballAssistant() {
                       {message.sender === "user" ? "You" : "Football Expert"}
                     </span>
                   </div>
-                  <p className="text-sm sm:text-base">{message.text}</p>
+                  <p className="text-sm ">{message.text}</p>
                 </div>
               </div>
             ))}
@@ -196,11 +196,11 @@ export default function FootballAssistant() {
             )}
           </div>
 
-          <div className="flex items-center border border-gray-300 rounded-lg px-3 py-2 bg-white">
+          <div className="flex items-center border-2 border-gray-600 rounded-lg px-3 py-2 bg-white">
             <input
               type="text"
               placeholder={`Ask another ${activeLevel} level question...`}
-              className="flex-grow px-2 py-1 text-sm outline-none bg-transparent text-gray-800 placeholder-gray-400"
+              className="flex-grow px-2 py-1 text-sm  outline-none bg-transparent text-gray-800 placeholder-gray-800"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
@@ -217,11 +217,11 @@ export default function FootballAssistant() {
       )}
 
       {/* Info section */}
-      <div className="text-center max-w-2xl">
-        <p className="text-gray-500 text-sm mb-2">
+      <div className=" max-w-2xl">
+        <p className="text-gray-700 text-lg mb-1">
           Selected level: <span className="font-medium text-lime-600 capitalize">{activeLevel}</span>
         </p>
-        <p className="text-gray-400 text-xs">
+        <p className="text-gray-600 text-md text-center">
           The assistant will tailor responses based on your selected knowledge level
         </p>
       </div>
