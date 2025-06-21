@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect , useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { auth, db } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { signOut } from "firebase/auth";
+// import { auth, db } from "@/lib/firebase";
+// import { onAuthStateChanged } from "firebase/auth";
+// import { doc, getDoc } from "firebase/firestore";
+// import { signOut } from "firebase/auth";
 import {
   FaSearch,
   FaBell,
@@ -17,7 +17,7 @@ import {
   FaInfoCircle,
   FaShieldAlt,
   FaEnvelope,
-  FaTimes ,
+  FaTimes,
 } from "react-icons/fa";
 import { MdMenu, MdClose } from "react-icons/md";
 import toast from 'react-hot-toast';
@@ -25,12 +25,13 @@ import toast from 'react-hot-toast';
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [userName, setUserName] = useState<string>("");
-  const [role, setRole] = useState<string>("");
+  const [user, setUser] = useState<any>({ uid: "dummy-uid" }); // Dummy user data
+  const [userName, setUserName] = useState<string>("John Doe"); // Dummy user name
+  const [role, setRole] = useState<string>("user"); // Dummy role
   const pathname = usePathname();
 
-  // Fetch user data and listen for auth state changes
+  // Commented out Firebase auth and data fetching
+  /*
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -55,10 +56,15 @@ export default function Navbar() {
 
     return () => unsubscribe();
   }, []);
+  */
 
+  // Dummy logout function
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      // await signOut(auth);
+      setUser(null);
+      setUserName("");
+      setRole("");
       toast.success("Logged out successfully");
       setDropdownOpen(false);
       setMenuOpen(false);
@@ -133,7 +139,7 @@ export default function Navbar() {
           </button>
           <button
             onClick={() => scrollToSection("live-competition")}
-            className="bg-lime-400 hover:bg-lime-500 text-white  px-4 py-2 rounded-full flex items-center shadow-lg transition-colors"
+            className="bg-lime-400 hover:bg-lime-500 text-white px-4 py-2 rounded-full flex items-center shadow-lg transition-colors"
           >
             LIVE COMPETITION
             <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
@@ -144,37 +150,37 @@ export default function Navbar() {
 
         {/* Right Icons - Desktop */}
         <div className="hidden lg:flex items-center space-x-6">
-        <div className="relative flex">
-      {/* Search Bar - Positioned absolutely to the left */}
-      <div
-        className={`absolute right-8 top-[-10]  bg-white border border-gray-500 rounded-full overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "w-fit opacity-100" : " opacity-0"
-        }`}
-        style={{ transformOrigin: 'right center' }}
-      >
-        <div className="flex items-center px-4 py-2">
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder="Search ..."
-            className="flex-grow outline-none text-gray-700 placeholder-gray-600 text-sm"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
+          <div className="relative flex">
+            {/* Search Bar - Positioned absolutely to the left */}
+            <div
+              className={`absolute right-8 top-[-10] bg-white border border-gray-500 rounded-full overflow-hidden transition-all duration-300 ease-in-out ${
+                isOpen ? "w-fit opacity-100" : "opacity-0"
+              }`}
+              style={{ transformOrigin: 'right center' }}
+            >
+              <div className="flex items-center px-4 py-2">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search ..."
+                  className="flex-grow outline-none text-gray-700 placeholder-gray-600 text-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
 
-      {/* Search Button - Fixed position */}
-      <button
-        onClick={toggleSearch}
-        className={`text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors z-10 ${
-          isOpen ? "text-lime-500" : ""
-        }`}
-        aria-label="Search"
-      >
-        <FaSearch />
-      </button>
-    </div>
+            {/* Search Button - Fixed position */}
+            <button
+              onClick={toggleSearch}
+              className={`text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors z-10 ${
+                isOpen ? "text-lime-500" : ""
+              }`}
+              aria-label="Search"
+            >
+              <FaSearch />
+            </button>
+          </div>
           <button 
             className="text-gray-600 hover:text-lime-500 cursor-pointer text-lg transition-colors"
             aria-label="Notifications"
@@ -259,7 +265,7 @@ export default function Navbar() {
                     className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    <FaEnvelope className="mr-3  text-lime-500 text-lg" />
+                    <FaEnvelope className="mr-3 text-lime-500 text-lg" />
                     <span>Contact</span>
                   </Link>
                   <button
@@ -321,7 +327,6 @@ export default function Navbar() {
                   className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {/* <FaUserCircle className="mr-3 text-lime-500 text-lg" /> */}
                   <span>Profile</span>
                 </Link>
                 <Link
@@ -329,19 +334,6 @@ export default function Navbar() {
                   className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {/* <svg
-                    className="mr-3 text-lime-500 text-lg w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
-                  </svg> */}
                   <span>Update Profile</span>
                 </Link>
                 <Link
@@ -349,7 +341,6 @@ export default function Navbar() {
                   className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {/* <FaInfoCircle className="mr-3 text-lime-500 text-lg" /> */}
                   <span>About</span>
                 </Link>
                 <Link
@@ -357,7 +348,6 @@ export default function Navbar() {
                   className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {/* <FaShieldAlt className="mr-3 text-lime-500 text-lg" /> */}
                   <span>Policy</span>
                 </Link>
                 <Link
@@ -365,7 +355,6 @@ export default function Navbar() {
                   className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
-                  {/* <FaEnvelope className="mr-3 text-lime-500 text-lg" /> */}
                   <span>Contact</span>
                 </Link>
               </>

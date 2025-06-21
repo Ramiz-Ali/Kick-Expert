@@ -1,22 +1,24 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { auth, db } from '@/lib/firebase';
-import { doc, getDoc } from "firebase/firestore";
-import toast, { Toaster } from 'react-hot-toast';
+// import { auth, db } from '@/lib/firebase';
+// import { doc, getDoc } from "firebase/firestore";
+// import toast, { Toaster } from 'react-hot-toast';
 import AdminLayout from '../../components/AdminLayout';
 import AdminStats from '@/components/AdminStats';
 import AdminTicker from '@/components/AdminTicker';
 import AdminQuiz from '@/components/AdminQuiz';
 import Navbar from '@/components/Navbar';
-import { FirestoreUser } from '@/types/user';
+// import { FirestoreUser } from '@/types/user';
 
 export default function AdminDashboard() {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<FirestoreUser | null>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [user, setUser] = useState<FirestoreUser | null>(null);
   const router = useRouter();
 
+  /*
   useEffect(() => {
     const checkAdmin = async () => {
       const currentUser = auth.currentUser;
@@ -48,7 +50,9 @@ export default function AdminDashboard() {
     };
     checkAdmin();
   }, [router]);
+  */
 
+  /*
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -75,10 +79,11 @@ export default function AdminDashboard() {
       </div>
     );
   }
+  */
 
   return (
     <div className="mt-18 md:mt-14 ">
-      <Toaster
+      {/* <Toaster
         position="top-center"
         toastOptions={{
           style: {
@@ -88,19 +93,18 @@ export default function AdminDashboard() {
           success: { duration: 3000 },
           error: { duration: 4000 },
         }}
-      />
+      /> */}
       <Navbar />
       <AdminLayout>
-        <div className="mb-4 sm:mb-6">
+        {/* <div className="mb-4 sm:mb-6">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800">
             Admin Dashboard – KickExpert
           </h1>
-        </div>
+        </div> */}
         <div className="space-y-4 sm:space-y-6 lg:space-y-8">
           <AdminStats />
           <AdminTicker />
           <AdminQuiz />
- 
         </div>
       </AdminLayout>
     </div>

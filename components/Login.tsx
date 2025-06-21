@@ -2,17 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { auth, db } from "@/lib/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+// import { auth, db } from "@/lib/firebase";
+// import { signInWithEmailAndPassword } from "firebase/auth";
+// import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
-import toast, { Toaster } from 'react-hot-toast';
-import { FirestoreUser } from '@/types/user';
+// import toast, { Toaster } from 'react-hot-toast';
+// import { FirestoreUser } from '@/types/user';
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const router = useRouter();
 
@@ -31,6 +31,7 @@ export default function Login() {
     return () => clearInterval(interval);
   }, [slides.length]);
 
+  /*
   const validateForm = () => {
     if (!email.trim()) {
       toast.error('Email is required');
@@ -86,10 +87,11 @@ export default function Login() {
       setLoading(false);
     }
   };
+  */
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      <Toaster
+      {/* <Toaster
         position="top-center"
         toastOptions={{
           style: {
@@ -110,8 +112,8 @@ export default function Login() {
             duration: Infinity,
           },
         }}
-      />
-      <div className="hidden lg:flex w-1/2 relative overflow-hidden h-[80vh] self-center">
+      /> */}
+       <div className="hidden lg:flex w-1/2 relative overflow-hidden h-[80vh] self-center">
         <div className="relative rounded-2xl w-full h-full">
           {slides.map((slide, index) => (
             <div
@@ -151,11 +153,11 @@ export default function Login() {
       </div>
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
+          {/* <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Log In</h1>
             <p className="text-gray-600">Access your account and explore amazing features</p>
-          </div>
-          <form onSubmit={handleLogin} className="space-y-6">
+          </div> */}
+          <form /* onSubmit={handleLogin} */ className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
@@ -186,12 +188,10 @@ export default function Login() {
             </div>
             <button
               type="submit"
-              disabled={loading}
-              className={`w-full py-3 px-4 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg transition duration-300 ${
-                loading ? 'opacity-70 cursor-not-allowed' : ''
-              }`}
+              // disabled={loading}
+              className={`w-full py-3 px-4 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg transition duration-300 /*  */`}
             >
-              {loading ? (
+              {/* {loading ? (
                 <span className="flex items-center justify-center">
                   <svg
                     className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -217,7 +217,8 @@ export default function Login() {
                 </span>
               ) : (
                 'Log In'
-              )}
+              )} */}
+              Log In
             </button>
           </form>
           <div className="mt-6 text-center">
@@ -233,6 +234,7 @@ export default function Login() {
           </div>
         </div>
       </div>
+     
     </div>
   );
 }

@@ -1,24 +1,39 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { auth, db } from '@/lib/firebase';
-import { collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
+// import { auth, db } from '@/lib/firebase';
+// import { collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import toast, { Toaster } from 'react-hot-toast';
-import { FirestoreUser } from '@/types/user';
+// import { FirestoreUser } from '@/types/user';
 import { Pencil, Trash2, Search } from 'lucide-react';
 
+// Define a local user type since FirestoreUser is commented out
+interface User {
+  uid: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'user';
+  createdAt: string;
+}
+
 export default function RegisteredUsers() {
-  const [users, setUsers] = useState<FirestoreUser[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<FirestoreUser[]>([]);
+  const [users, setUsers] = useState<User[]>([
+    { uid: "user1", name: "John Doe", email: "john.doe@example.com", role: "user", createdAt: new Date().toISOString() },
+    { uid: "user2", name: "Jane Smith", email: "jane.smith@example.com", role: "admin", createdAt: new Date().toISOString() },
+    { uid: "user3", name: "Bob Johnson", email: "bob.johnson@example.com", role: "user", createdAt: new Date().toISOString() },
+  ]); // Dummy user data
+  const [filteredUsers, setFilteredUsers] = useState<User[]>(users);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [editUser, setEditUser] = useState<FirestoreUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(false); // Set to false since no async fetching
+  const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const router = useRouter();
 
-  // Check admin access
+  // Commented out Firebase admin check and user fetching
   useEffect(() => {
+    /*
     const checkAdmin = async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -35,9 +50,21 @@ export default function RegisteredUsers() {
       fetchUsers();
     };
     checkAdmin();
-  }, [router]);
+    */
 
-  // Fetch all users with safe defaults
+    // Simulate admin check with dummy logic
+    const isAdmin = true; // Assume admin for testing; set to false to test redirect
+    if (!isAdmin) {
+      toast.error("Access denied. Admins only.");
+      router.push("/");
+      return;
+    }
+    setFilteredUsers(users); // Initialize filtered users with dummy data
+    setLoading(false);
+  }, [router, users]);
+
+  // Commented out Firebase fetchUsers
+  /*
   const fetchUsers = async () => {
     try {
       const usersSnapshot = await getDocs(collection(db, "users"));
@@ -61,6 +88,7 @@ export default function RegisteredUsers() {
       setLoading(false);
     }
   };
+  */
 
   // Safe search implementation
   useEffect(() => {
@@ -95,7 +123,10 @@ export default function RegisteredUsers() {
 
     const toastId = toast.loading("Updating user...");
     try {
+      // Simulate Firebase update
+      /*
       await setDoc(doc(db, "users", editUser.uid), editUser, { merge: true });
+      */
       setUsers(users.map(u => u.uid === editUser.uid ? editUser : u));
       setFilteredUsers(filteredUsers.map(u => u.uid === editUser.uid ? editUser : u));
       toast.success("User updated successfully", { id: toastId });
@@ -110,7 +141,10 @@ export default function RegisteredUsers() {
   const handleDelete = async (uid: string) => {
     const toastId = toast.loading("Deleting user...");
     try {
+      // Simulate Firebase delete
+      /*
       await deleteDoc(doc(db, "users", uid));
+      */
       setUsers(users.filter(u => u.uid !== uid));
       setFilteredUsers(filteredUsers.filter(u => u.uid !== uid));
       toast.success("User deleted successfully", { id: toastId });
@@ -276,6 +310,7 @@ export default function RegisteredUsers() {
                   </button>
                   <button
                     type="submit"
+                  
                     className="px-4 py-2 bg-lime-600 text-white rounded-lg hover:bg-lime-700"
                   >
                     Save
@@ -296,7 +331,7 @@ export default function RegisteredUsers() {
                 <button
                   onClick={() => setDeleteConfirm(null)}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
+                  >
                   Cancel
                 </button>
                 <button

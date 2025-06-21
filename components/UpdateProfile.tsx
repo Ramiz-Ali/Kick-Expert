@@ -1,16 +1,17 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { updateEmail, updateProfile } from "firebase/auth";
+// import { auth, db } from "@/lib/firebase";
+// import { doc, getDoc, setDoc } from "firebase/firestore";
+// import { updateEmail, updateProfile } from "firebase/auth";
 import toast, { Toaster } from 'react-hot-toast';
 import Image from "next/image";
 
 export default function UpdateProfile() {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("John Doe"); // Dummy name
+  const [email, setEmail] = useState<string>("john.doe@example.com"); // Dummy email
   const [loading, setLoading] = useState<boolean>(false);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const router = useRouter();
@@ -23,35 +24,35 @@ export default function UpdateProfile() {
     "/images/slide5.jpg",
   ];
 
-  // Fetch user data on mount
+  // Commented out Firebase data fetching
   useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        setEmail(user.email || "");
-        try {
-          const userDoc = await getDoc(doc(db, "users", user.uid));
-          if (userDoc.exists()) {
-            setName(userDoc.data().name || "");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          toast.error("Failed to load profile data");
-        }
-      } else {
-        toast.error("Please log in to update your profile");
-        router.push("/login");
-      }
-    };
+    // const fetchUserData = async () => {
+    //   const user = auth.currentUser;
+    //   if (user) {
+    //     setEmail(user.email || "");
+    //     try {
+    //       const userDoc = await getDoc(doc(db, "users", user.uid));
+    //       if (userDoc.exists()) {
+    //         setName(userDoc.data().name || "");
+    //       }
+    //     } catch (error) {
+    //       console.error("Error fetching user data:", error);
+    //       toast.error("Failed to load profile data");
+    //     }
+    //   } else {
+    //     toast.error("Please log in to update your profile");
+    //     router.push("/login");
+    //   }
+    // };
 
-    fetchUserData();
+    // fetchUserData();
 
     // Slideshow interval
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [router, slides.length]);
+  }, [router, slides.length]); // Fixed: Closed useEffect properly
 
   const validateForm = () => {
     if (!name.trim()) {
@@ -76,7 +77,8 @@ export default function UpdateProfile() {
       return;
     }
 
-    const user = auth.currentUser;
+    // Dummy user check
+    const user = { uid: "dummy-uid", email: "john.doe@example.com" }; // Dummy user
     if (!user) {
       toast.error("No user is logged in");
       return;
@@ -86,22 +88,21 @@ export default function UpdateProfile() {
     const toastId = toast.loading('Updating your profile...');
 
     try {
-      // Update Firebase Authentication profile
+      // Commented out Firebase Authentication and Firestore updates
+      /*
       await updateProfile(user, { displayName: name });
-      
-      // Update email in Firebase Authentication if changed
       if (user.email !== email) {
         await updateEmail(user, email);
       }
-
-      // Update Firestore document
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email: email,
         name: name,
-        createdAt: new Date().toISOString(), // Preserve original createdAt
+        createdAt: new Date().toISOString(),
       }, { merge: true });
+      */
 
+      // Simulate successful update
       toast.success('Profile updated successfully!', { id: toastId });
       setTimeout(() => {
         router.push("/");
@@ -273,3 +274,4 @@ export default function UpdateProfile() {
     </div>
   );
 }
+
