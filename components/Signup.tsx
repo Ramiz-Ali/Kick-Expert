@@ -1,19 +1,20 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { auth, db } from "../lib/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+// import { auth, db } from "../lib/firebase";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
+// import { doc, setDoc } from "firebase/firestore";
 import Image from "next/image";
-import toast, { Toaster } from 'react-hot-toast';
+// import toast, { Toaster } from 'react-hot-toast';
 
 export default function Signup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [secretCode, setSecretCode] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [secretCode, setSecretCode] = useState<string>("");
+  // const [loading, setLoading] = useState<boolean>(false);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const router = useRouter();
 
@@ -25,7 +26,7 @@ export default function Signup() {
     "/images/slide5.jpg",
   ];
 
-  const ADMIN_SECRET_CODE = "ADMIN2025"; // Define your secret code here
+  // const ADMIN_SECRET_CODE = "ADMIN2025"; // Define your secret code here
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,6 +35,7 @@ export default function Signup() {
     return () => clearInterval(interval);
   }, [slides.length]);
 
+  /*
   const validateForm = () => {
     if (!name.trim()) {
       toast.error('Full name is required');
@@ -96,10 +98,11 @@ export default function Signup() {
       setLoading(false);
     }
   };
+  */
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      <Toaster
+      {/* <Toaster
         position="top-center"
         toastOptions={{
           style: {
@@ -120,9 +123,8 @@ export default function Signup() {
             duration: Infinity,
           },
         }}
-      />
-
-      {/* Image Slideshow Section */}
+      /> */}
+         {/* Image Slideshow Section */}
       <div className="hidden lg:flex w-1/2 relative overflow-hidden h-[80vh] self-center">
         <div className="relative rounded-2xl w-full h-full">
           {slides.map((slide, index) => (
@@ -141,12 +143,12 @@ export default function Signup() {
               />
             </div>
           ))}
-          <div className="absolute bottom-10 left-0 right-0">
+          {/* <div className="absolute bottom-10 left-0 right-0">
             <div className="max-w-md mx-auto text-center text-white">
               <h2 className="text-2xl font-bold">Join Our Community</h2>
               <p className="text-lg mb-4">Sign up today and unlock exclusive features</p>
             </div>
-          </div>
+          </div> */}
           <div className="absolute bottom-5 left-0 right-0 flex justify-center space-x-2">
             {slides.map((_, index) => (
               <button
@@ -162,15 +164,14 @@ export default function Signup() {
         </div>
       </div>
 
-      {/* Signup Form Section */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
+          {/* <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
             <p className="text-gray-600">Join us today and unlock amazing features</p>
-          </div>
+          </div> */}
 
-          <form onSubmit={handleSignup} className="space-y-6">
+          <form /* onSubmit={handleSignup} */ className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                 Full Name
@@ -216,16 +217,27 @@ export default function Signup() {
               />
             </div>
 
-       
+            {/* <div>
+              <label htmlFor="secretCode" className="block text-sm font-medium text-gray-700 mb-1">
+                Secret Code (for admin access, optional)
+              </label>
+              <input
+                id="secretCode"
+                type="text"
+                placeholder="Enter secret code if provided"
+                value={secretCode}
+                onChange={(e) => setSecretCode(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition"
+              />
+            </div> */}
 
             <button
               type="submit"
-              disabled={loading}
-              className={`w-full py-3 px-4 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg transition duration-300 ${
-                loading ? 'opacity-70 cursor-not-allowed' : ''
-              }`}
+              // disabled={loading}
+              className={`w-full py-3 px-4 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg transition duration-300 `}
             >
-              {loading ? (
+              {/* {loading ? (
+              
                 <span className="flex items-center justify-center">
                   <svg
                     className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -251,7 +263,8 @@ export default function Signup() {
                 </span>
               ) : (
                 'Sign Up'
-              )}
+              )} */}
+              Sign Up
             </button>
           </form>
 
@@ -268,6 +281,8 @@ export default function Signup() {
           </div>
         </div>
       </div>
+
+   
     </div>
   );
 }

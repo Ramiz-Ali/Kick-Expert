@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { auth, db } from "@/lib/firebase";
-import { doc, getDoc } from "firebase/firestore";
+// import { auth, db } from "@/lib/firebase";
+// import { doc, getDoc } from "firebase/firestore";
 import toast, { Toaster } from 'react-hot-toast';
 import Image from "next/image";
 
 export default function Profile() {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [createdAt, setCreatedAt] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [name, setName] = useState<string>("John Doe"); // Dummy name
+  const [email, setEmail] = useState<string>("john.doe@example.com"); // Dummy email
+  const [createdAt, setCreatedAt] = useState<string>(new Date().toISOString()); // Dummy createdAt
+  const [loading, setLoading] = useState<boolean>(false); // Set to false since no async fetching
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const router = useRouter();
 
@@ -23,8 +23,9 @@ export default function Profile() {
     "/images/slide9.jpg",
   ];
 
-  // Fetch user data on mount
+  // Commented out Firebase data fetching
   useEffect(() => {
+    /*
     const fetchUserData = async () => {
       const user = auth.currentUser;
       if (user) {
@@ -51,6 +52,7 @@ export default function Profile() {
     };
 
     fetchUserData();
+    */
 
     // Slideshow interval
     const interval = setInterval(() => {
