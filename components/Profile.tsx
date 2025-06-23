@@ -13,6 +13,11 @@ export default function Profile() {
   const [createdAt, setCreatedAt] = useState<string>(new Date().toISOString()); // Dummy createdAt
   const [loading, setLoading] = useState<boolean>(false); // Set to false since no async fetching
   const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+  const [newName, setNewName] = useState<string>(name);
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const router = useRouter();
 
   const slides = [
@@ -61,15 +66,34 @@ export default function Profile() {
     return () => clearInterval(interval);
   }, [router, slides.length]);
 
-  // Format date for display
-  const formatDate = (isoString: string) => {
-    if (!isoString) return "N/A";
-    const date = new Date(isoString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+  const handleNameSave = () => {
+    if (newName.trim()) {
+      setName(newName.trim());
+      setIsEditingName(false);
+      toast.success("Name updated successfully");
+    } else {
+      toast.error("Name cannot be empty");
+    }
+  };
+
+  const handlePasswordChange = () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error("Please fill in all password fields");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error("New password and confirmation do not match");
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error("New password must be at least 6 characters");
+      return;
+    }
+    // Simulate password change (replace with actual logic)
+    toast.success("Password changed successfully");
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   return (
@@ -103,9 +127,8 @@ export default function Profile() {
           {slides.map((slide, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
+                }`}
             >
               <Image
                 src={slide}
@@ -129,9 +152,8 @@ export default function Profile() {
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`w-3 h-3 rounded-full ${
-                  index === currentSlide ? 'bg-lime-400' : 'bg-white bg-opacity-50'
-                }`}
+                className={`w-3 h-3 rounded-full ${index === currentSlide ? 'bg-lime-400' : 'bg-white bg-opacity-50'
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
@@ -142,11 +164,6 @@ export default function Profile() {
       {/* Profile Details Section */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Your Profile</h1>
-            <p className="text-gray-600">View your account information</p>
-          </div>
-
           {loading ? (
             <div className="flex justify-center">
               <svg
@@ -171,40 +188,138 @@ export default function Profile() {
               </svg>
             </div>
           ) : (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
-                <p className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-800">
-                  {name || "N/A"}
-                </p>
+            <div className="space-y-3">
+
+              {/* My Profile and Description */}
+              <div className="flex items-center  justify-center mb-6">
+                <div className="p-3 mr-4 bg-lime-100 rounded-full">
+                  <svg
+                    className="w-6 h-6 text-lime-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800">My Profile</h2>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address
-                </label>
-                <p className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-800">
-                  {email || "N/A"}
-                </p>
-              </div>
+              {/* Username with Edit Option */}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Account Created
-                </label>
-                <p className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-800">
-                  {formatDate(createdAt)}
-                </p>
+                <div className="flex items-center">
+                  {isEditingName ? (
+                    <input
+                      type="text"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      className="flex-1 px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                      autoFocus
+                    />
+                  ) : (
+                    <p className="flex-1 px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-700">
+                      {name}
+                    </p>
+                  )}
+                  <button
+                    onClick={isEditingName ? handleNameSave : () => setIsEditingName(true)}
+                    className="ml-4 p-2 bg-lime-100 hover:bg-lime-200 rounded-full transition duration-200"
+                  >
+                    <svg
+                      className="w-5 h-5 text-lime-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d={isEditingName ? "M5 13l4 4L19 7" : "M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"}
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
 
-              <button
-                onClick={() => router.push('/')}
-                className="w-full py-3 px-4 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg transition duration-300"
-              >
-                Back To Homepage
-              </button>
+
+
+              {/* Password Change Section */}
+              <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                <div className="flex items-center mb-8">
+                  <div className="p-3 mr-4 bg-lime-100 rounded-full">
+                    <svg
+                      className="w-6 h-6 text-lime-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-800">Password Security</h2>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase ">Current Password</label>
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                      placeholder="••••••••"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase ">New Password</label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                      placeholder="At least 8 characters"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase">Confirm Password</label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                      placeholder="••••••••"
+                    />
+                  </div>
+
+                  <button
+                    onClick={handlePasswordChange}
+                    className="w-full py-3 px-6 bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                  >
+                    Update Password
+                    <svg className="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+
+              </div>
             </div>
           )}
         </div>
