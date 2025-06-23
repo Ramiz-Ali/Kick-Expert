@@ -4,10 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-// import { auth, db } from "@/lib/firebase";
-// import { onAuthStateChanged } from "firebase/auth";
-// import { doc, getDoc } from "firebase/firestore";
-// import { signOut } from "firebase/auth";
 import {
   FaSearch,
   FaBell,
@@ -17,51 +13,50 @@ import {
   FaInfoCircle,
   FaShieldAlt,
   FaEnvelope,
-  FaTimes,
+  FaChartLine,
+  FaHome,
 } from "react-icons/fa";
-import { MdMenu, MdClose } from "react-icons/md";
+import { MdMenu, MdClose, MdDashboard } from "react-icons/md";
 import toast from 'react-hot-toast';
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>({ uid: "dummy-uid" }); // Dummy user data
-  const [userName, setUserName] = useState<string>("John Doe"); // Dummy user name
-  const [role, setRole] = useState<string>("user"); // Dummy role
+  const [user, setUser] = useState<any>({ uid: "dummy-uid" });
+  const [userName, setUserName] = useState<string>("John Doe");
+  const [role, setRole] = useState<string>("user");
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Commented out Firebase auth and data fetching
-  /*
+  // Close dropdown when clicking outside
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        try {
-          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-          if (userDoc.exists()) {
-            const data = userDoc.data();
-            setUserName(data.name || "User");
-            setRole(data.role || "user");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          toast.error("Failed to load user data");
-        }
-      } else {
-        setUser(null);
-        setUserName("");
-        setRole("");
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
       }
-    });
+    };
 
-    return () => unsubscribe();
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
-  */
 
-  // Dummy logout function
+  const toggleSearch = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isOpen]);
+
   const handleLogout = async () => {
     try {
-      // await signOut(auth);
       setUser(null);
       setUserName("");
       setRole("");
@@ -90,20 +85,6 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const toggleSearch = () => {
-    setIsOpen(!isOpen);
-  };
-
-  useEffect(() => {
-    if (isOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [isOpen]);
-
   return (
     <nav className="bg-white w-full z-50 shadow-sm fixed top-0">
       <div className="flex justify-between items-center px-4 py-3 md:px-8 lg:px-10">
@@ -127,16 +108,16 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-6">
           <button
             onClick={() => scrollToSection("chat-assistant")}
-            className="text-gray-600 hover:text-lime-500 font-bold transition-colors"
+            className={`px-3 py-1 rounded-md transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500 ' : ''}`}
           >
             Ask AI
           </button>
+          <Link href="/quiz">
           <button
-            onClick={() => scrollToSection("quiz-section")}
-            className="text-gray-600 hover:text-lime-500 font-bold transition-colors"
+            className={`px-3 py-1 rounded-md transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500' : ''}`}
           >
             Quiz
-          </button>
+          </button></Link>
           <button
             onClick={() => scrollToSection("live-competition")}
             className="bg-lime-400 hover:bg-lime-500 text-white px-4 py-2 rounded-full flex items-center shadow-lg transition-colors"
@@ -151,7 +132,7 @@ export default function Navbar() {
         {/* Right Icons - Desktop */}
         <div className="hidden lg:flex items-center space-x-6">
           <div className="relative flex">
-            {/* Search Bar - Positioned absolutely to the left */}
+            {/* Search Bar */}
             <div
               className={`absolute right-8 top-[-10] bg-white border border-gray-500 rounded-full overflow-hidden transition-all duration-300 ease-in-out ${
                 isOpen ? "w-fit opacity-100" : "opacity-0"
@@ -170,7 +151,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Search Button - Fixed position */}
+            {/* Search Button */}
             <button
               onClick={toggleSearch}
               className={`text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors z-10 ${
@@ -181,15 +162,19 @@ export default function Navbar() {
               <FaSearch />
             </button>
           </div>
+          
           <button 
-            className="text-gray-600 hover:text-lime-500 cursor-pointer text-lg transition-colors"
+            className="text-gray-600 hover:text-lime-500 cursor-pointer text-lg transition-colors relative"
             aria-label="Notifications"
           >
             <FaBell />
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              3
+            </span>
           </button>
 
           {user ? (
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center space-x-1 focus:outline-none"
@@ -215,38 +200,32 @@ export default function Navbar() {
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                   <Link
                     href="/profile"
-                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
+                      pathname === '/profile' ? 'bg-lime-50 text-lime-600' : ''
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaUserCircle className="mr-3 text-lime-500 text-lg" />
                     <span>Profile</span>
                   </Link>
                   <Link
-                    href="/updateProfile"
-                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    href="/dashboard"
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
+                      pathname === '/dashboard' ? 'bg-lime-50 text-lime-600' : ''
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
-                    <svg
-                      className="mr-3 text-lime-500 text-lg w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    <span>Update Profile</span>
+                    <MdDashboard className="mr-3 text-lime-500 text-lg" />
+                    <span>Dashboard</span>
                   </Link>
                   <Link
                     href="/about"
-                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
+                      pathname === '/about' ? 'bg-lime-50 text-lime-600' : ''
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaInfoCircle className="mr-3 text-lime-500 text-lg" />
@@ -254,7 +233,9 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/policy"
-                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
+                      pathname === '/policy' ? 'bg-lime-50 text-lime-600' : ''
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaShieldAlt className="mr-3 text-lime-500 text-lg" />
@@ -262,19 +243,23 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/contact"
-                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center transition-colors"
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
+                      pathname === '/contact' ? 'bg-lime-50 text-lime-600' : ''
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaEnvelope className="mr-3 text-lime-500 text-lg" />
                     <span>Contact</span>
                   </Link>
-                  <button
-                    className="px-4 py-3 pl-5 text-gray-700 hover:bg-gray-100 flex items-center w-full text-left transition-colors"
-                    onClick={handleLogout}
-                  >
-                    <FaSignOutAlt className="mr-3 text-lime-500 text-lg" />
-                    <span>Logout</span>
-                  </button>
+                  <div className="border-t border-gray-200">
+                    <button
+                      className="px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center w-full text-left transition-colors"
+                      onClick={handleLogout}
+                    >
+                      <FaSignOutAlt className="mr-3 text-lime-500 text-lg" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -330,11 +315,11 @@ export default function Navbar() {
                   <span>Profile</span>
                 </Link>
                 <Link
-                  href="/updateProfile"
+                  href="/dashboard"
                   className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
                   onClick={() => setMenuOpen(false)}
                 >
-                  <span>Update Profile</span>
+                  <span>Dashboard</span>
                 </Link>
                 <Link
                   href="/about"

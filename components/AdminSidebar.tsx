@@ -1,18 +1,30 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Home, Users, Film, Camera, Clock, BarChart, Gamepad } from "lucide-react";
+import { 
+  Home, 
+  Users, 
+  Trophy, 
+  HelpCircle, 
+  Clock, 
+  MessageSquare, 
+  Bell, 
+  Settings,
+  FileQuestion,
+  DollarSign
+} from "lucide-react";
 import Link from "next/link";
 import clsx from "clsx";
 
 const menuItems = [
   { label: "Dashboard", icon: Home, href: "/admindashboard" },
   { label: "Registered Users", icon: Users, href: "/admindashboard/users" },
-  { label: "Shorts", icon: Film, href: "/shorts" },
-  { label: "Web-Stories", icon: Camera, href: "/web-stories" },
-  { label: "Quizzes", icon: Clock, href: "/quizzes" },
-  { label: "Subscriptions", icon: BarChart, href: "/subscriptions" },
-  { label: "Games", icon: Gamepad, href: "/games" },
+  { label: "Competitions", icon: Trophy, href: "/admindashboard/competitions" },
+  { label: "Questions", icon: FileQuestion, href: "/admindashboard/question" },
+  { label: "Payouts", icon: DollarSign, href: "/admindashboard/payout" },
+  { label: "Support", icon: HelpCircle, href: "/admindashboard/support" },
+  { label: "Notification", icon: Bell, href: "/admindashboard/notification" },
+  { label: "Settings", icon: Settings, href: "/admindashboard/settings" },
 ];
 
 interface AdminSidebarProps {
@@ -32,9 +44,6 @@ export default function AdminSidebar({ onNavigate }: AdminSidebarProps) {
         // Check if the current pathname matches or starts with the item href
         const isActive = normalizedPathname === item.href ||
                          (item.href !== '/admindashboard' && normalizedPathname.startsWith(item.href));
-
-        // Debug logging
-        console.log(`Menu Item: ${item.label}, Href: ${item.href}, Pathname: ${normalizedPathname}, Active: ${isActive}`);
 
         return (
           <Link

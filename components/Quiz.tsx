@@ -1,0 +1,301 @@
+'use client';
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+interface Question {
+  question_text: string;
+  category: string;
+  difficulty: string;
+  choices: string[];
+  correct_answer: string;
+  explanation?: string;
+}
+
+const questions: Question[] = [
+  {
+    question_text: "Which club won the UEFA Champions League in 2012?",
+    category: "UEFA Champions League",
+    difficulty: "Medium",
+    choices: ["FC Barcelona", "Chelsea FC", "Real Madrid", "Bayern Munich"],
+    correct_answer: "Chelsea FC",
+    explanation: "Chelsea won their first Champions League title by defeating Bayern Munich on penalties in their own stadium."
+  },
+  {
+    question_text: "Which player has won the most Champions League titles?",
+    category: "UEFA Champions League",
+    difficulty: "Medium",
+    choices: ["Lionel Messi", "Cristiano Ronaldo", "Paolo Maldini", "Francisco Gento"],
+    correct_answer: "Francisco Gento",
+    explanation: "Gento won 6 European Cups with Real Madrid between 1956 and 1966."
+  },
+  {
+    question_text: "Which English club was first to win the European Cup?",
+    category: "UEFA Champions League",
+    difficulty: "Hard",
+    choices: ["Liverpool", "Manchester United", "Nottingham Forest", "Aston Villa"],
+    correct_answer: "Manchester United",
+    explanation: "Manchester United won in 1968, defeating Benfica 4-1 in the final."
+  },
+  {
+    question_text: "Which stadium has hosted the most Champions League finals?",
+    category: "UEFA Champions League",
+    difficulty: "Medium",
+    choices: ["Wembley Stadium", "Santiago Bernabéu", "San Siro", "Olympiastadion"],
+    correct_answer: "Wembley Stadium",
+    explanation: "Wembley has hosted 7 finals (old and new stadium combined)."
+  },
+  {
+    question_text: "Who scored the fastest goal in Champions League history?",
+    category: "UEFA Champions League",
+    difficulty: "Hard",
+    choices: ["Roy Makaay", "Ryan Giggs", "Gareth Bale", "Mario Mandžukić"],
+    correct_answer: "Roy Makaay",
+    explanation: "Makaay scored after 10.12 seconds for Bayern Munich against Real Madrid in 2007."
+  },
+];
+
+
+export default function QuizDashboard() {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedChoice, setSelectedChoice] = useState<string | null>(null);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + (quizCompleted ? 1 : 0)) / questions.length) * 100;
+
+  const handleChoiceSelect = (choice: string) => {
+    if (!showResult) {
+      setSelectedChoice(choice);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (selectedChoice === currentQuestion.correct_answer) {
+      setScore(score + 1);
+    }
+
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedChoice(null);
+      setShowResult(false);
+    } else {
+      setQuizCompleted(true);
+    }
+  };
+
+  const handleRestartQuiz = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedChoice(null);
+    setScore(0);
+    setShowResult(false);
+    setQuizCompleted(false);
+  };
+
+  return (
+    <div className="min-h-fit mt-14 bg-gray-50 text-gray-800 p-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-lime-400 to-lime-500 p-6">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-white">Champions League Quiz</h1>
+            <div className="flex items-center space-x-4">
+              <div className="bg-white bg-opacity-20 px-4 py-1 rounded-full">
+                <span className="font-bold text-black">{score}</span>
+                <span className="text-black opacity-80">/{questions.length}</span>
+              </div>
+              <div className="w-32 h-2 bg-white  bg-opacity-30 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-lime-700 transition-all duration-500" 
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quiz Content */}
+        <div className="p-6">
+          {!quizCompleted ? (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentQuestionIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {/* Question Meta */}
+                <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
+                  <div className="flex items-center space-x-3">
+                    <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600">
+                      {currentQuestion.category}
+                    </span>
+                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                      currentQuestion.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                      currentQuestion.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {currentQuestion.difficulty}
+                    </span>
+                  </div>
+                  <span className="text-gray-500">
+                    Question {currentQuestionIndex + 1} of {questions.length}
+                  </span>
+                </div>
+
+                {/* Question */}
+                <h2 className="text-xl font-semibold mb-6 text-gray-800">
+                  {currentQuestion.question_text}
+                </h2>
+
+                {/* Choices */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  {currentQuestion.choices.map((choice, index) => (
+                    <motion.button
+                      key={index}
+                      whileHover={!showResult ? { scale: 1.02 } : {}}
+                      whileTap={!showResult ? { scale: 0.98 } : {}}
+                      onClick={() => handleChoiceSelect(choice)}
+                      className={`p-4 rounded-xl border-2 text-left transition-all ${
+                        showResult && choice === currentQuestion.correct_answer ? 
+                          'border-green-500 bg-green-50' :
+                        showResult && selectedChoice === choice ? 
+                          'border-red-500 bg-red-50' :
+                        selectedChoice === choice ? 
+                          'border-lime-400 bg-lime-50' :
+                          'border-gray-200 hover:border-lime-300 bg-white'
+                      }`}
+                      disabled={showResult}
+                    >
+                      <div className="flex items-center">
+                        <span className="font-medium">{choice}</span>
+                        {showResult && choice === currentQuestion.correct_answer && (
+                          <span className="ml-2 text-green-500">✓</span>
+                        )}
+                        {showResult && selectedChoice === choice && 
+                         selectedChoice !== currentQuestion.correct_answer && (
+                          <span className="ml-2 text-red-500">✗</span>
+                        )}
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col space-y-4">
+                  {selectedChoice && !showResult && (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setShowResult(true)}
+                      className="w-full py-3 bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-white font-bold rounded-xl shadow-md transition-all"
+                    >
+                      Submit Answer
+                    </motion.button>
+                  )}
+
+                  {showResult && (
+                    <>
+                      {currentQuestion.explanation && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          className="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4"
+                        >
+                          <p className="text-lime-600 font-semibold mb-1">Explanation:</p>
+                          <p className="text-gray-600">{currentQuestion.explanation}</p>
+                        </motion.div>
+                      )}
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handleNextQuestion}
+                        className="w-full py-3 bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-white font-bold rounded-xl shadow-md transition-all"
+                      >
+                        {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'View Results'}
+                      </motion.button>
+                    </>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="text-center py-8"
+            >
+              <div className="relative w-48 h-48 mx-auto mb-8">
+                <svg className="w-full h-full" viewBox="0 0 100 100">
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="none"
+                    stroke="#e5e7eb"
+                    strokeWidth="8"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="45"
+                    fill="none"
+                    stroke="url(#gradient)"
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeDasharray={`${(score / questions.length) * 283} 283`}
+                    transform="rotate(-90 50 50)"
+                  />
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#84cc16" />
+                      <stop offset="100%" stopColor="#84cc16" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-4xl font-bold text-gray-800">
+                    {Math.round((score / questions.length) * 100)}%
+                  </span>
+                  <span className="text-gray-500">Score</span>
+                </div>
+              </div>
+
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">
+                {score === questions.length ? "🏆 Perfect Score!" :
+                 score >= questions.length * 0.8 ? "🎉 Excellent!" :
+                 score >= questions.length * 0.6 ? "👍 Good Job!" : 
+                 "💪 Keep Practicing!"}
+              </h2>
+              <p className="text-gray-600 mb-6">
+                You answered {score} out of {questions.length} questions correctly
+              </p>
+
+              <div className="flex justify-center space-x-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleRestartQuiz}
+                  className="px-6 py-3 bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-white font-bold rounded-xl shadow-md transition-all"
+                >
+                  Restart Quiz
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl shadow-md transition-all"
+                >
+                  Back to Dashboard
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
