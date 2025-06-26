@@ -1,7 +1,7 @@
 'use client';
 
-import AdminLayout from '@/components/AdminLayout';
-import RegisteredUsers from '@/components/RegisteredUsers';
+import AdminLayout from '@/components/Admin/AdminLayout';
+import RegisteredUsers from '@/components/Admin/RegisteredUsers';
 import Navbar from '@/components/Navbar';
 import { Toaster } from 'react-hot-toast';
 

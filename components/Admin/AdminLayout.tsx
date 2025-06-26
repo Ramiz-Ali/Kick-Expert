@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
-import AdminSidebar from "@/components/AdminSidebar"
+import AdminSidebar from "@/components/Admin/AdminSidebar"
 import type { ReactNode } from "react"
 
 interface AdminLayoutProps {
