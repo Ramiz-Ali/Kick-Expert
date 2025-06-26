@@ -118,15 +118,16 @@ export default function Navbar() {
           >
             Quiz
           </button></Link>
+          <Link href={"/livecompetition"}>
           <button
-            onClick={() => scrollToSection("live-competition")}
+        
             className="bg-lime-400 hover:bg-lime-500 text-white px-4 py-2 rounded-full flex items-center shadow-lg transition-colors"
           >
             LIVE COMPETITION
             <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
               LIVE
             </span>
-          </button>
+          </button></Link>
         </div>
 
         {/* Right Icons - Desktop */}

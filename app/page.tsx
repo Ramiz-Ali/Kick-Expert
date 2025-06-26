@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import LiveCompetition from "../components/LiveCompetition";
+import LiveCompetition from "../components/CompetitionSection";
 import ExploreHistory from "@/components/ExploreHistory";
 import FootballExample from "@/components/FootballExample";
 import FootballHistory from "@/components/FootballHistory";
