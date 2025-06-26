@@ -1,9 +1,9 @@
 'use client';
 
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/Admin/AdminLayout';
 import Navbar from '@/components/Navbar';
 import { Toaster } from 'react-hot-toast';
-import Question from '@/components/Question';
+import Question from '@/components/Admin/Question';
 
 export default function UsersPage() {
   return (

@@ -34,8 +34,8 @@ export default function FootballAssistant() {
     if (searchQuery.trim() === "") return;
 
     // Add user message
-    const userMessage = { 
-      text: searchQuery, 
+    const userMessage = {
+      text: searchQuery,
       sender: "user"
     };
     setMessages((prev) => [...prev, userMessage]);
@@ -48,8 +48,8 @@ export default function FootballAssistant() {
       const randomResponse = responses[Math.floor(Math.random() * responses.length)]
         .replace("{query}", `"${searchQuery}"`);
 
-      setMessages((prev) => [...prev, { 
-        text: randomResponse, 
+      setMessages((prev) => [...prev, {
+        text: randomResponse,
         sender: "ai"
       }]);
       setIsLoading(false);
@@ -70,47 +70,65 @@ export default function FootballAssistant() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col items-center justify-center px-4 pt-20 pb-8 md:pt-36 min-h-screen">
+    <div className="flex flex-col items-center justify-center px-4 pt-20 pb-8 md:pt-28 min-h-screen">
       {/* Header section */}
       <div className="relative text-center mb-10 w-full max-w-4xl">
-        <p className="text-lime-600 font-bold text-xl mb-2">Football History</p>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text  mb-4">
-          Choose Your Knowledge Level
+        <div className="flex items-center justify-center">
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={50}
+            height={50}
+            className="w-8 h-8 md:w-15 md:h-15"
+          />
+          <span className="ml-2 text-lime-400 font-bold text-xl md:text-2xl">
+            Kick<span className="text-black ml-1">Expert</span>
+          </span>
+        </div>
+        <h1 className="text-3xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-b from-green-900 to-lime-400 text-transparent bg-clip-text  mb-4">
+          Ask Anything About Football History
         </h1>
-        <p className="text-lime-600 max-w-2xl mx-auto text-sm sm:text-base">
-          Get tailored football history answers based on your expertise
+        <p className="text-lime-600 max-w-xl mx-auto text-sm sm:text-base">
+          Get instant Ai-powered answers about players, matches, goals and tournaments from international Football history 
         </p>
+       
       </div>
 
       {/* Knowledge level cards */}
-      <div className="flex flex-col sm:flex-row items-stretch justify-center gap-4 mb-8 w-full max-w-4xl">
+      <div className="flex flex-col w-full gap-2">
+         <p className="text-lime-600 max-w-xl mx-auto text-sm sm:text-base">
+          Choose Your Knowledge Level
+        </p>
+      <div className="flex flex-row  justify-center gap-4 mb-8 w-full max-w-4xl">
         {(["easy", "medium", "hard"] as const).map((level) => (
-          <div 
+          <div
             key={level}
-            className={`flex-1 border-2 rounded-xl p-4 sm:p-6 text-center transition-all cursor-pointer
-              ${activeLevel === level 
-                ? "border-lime-500 bg-lime-100 shadow-md" 
+            className={`flex-1 border-2 rounded-xl p-2 md:p-4   text-center transition-all cursor-pointer
+              ${activeLevel === level
+                ? "border-lime-500 bg-lime-100 shadow-md"
                 : "border-gray-400 hover:border-lime-300"}`}
             onClick={() => setActiveLevel(level)}
           >
             <div className="flex flex-col items-center">
-              <span className={`text-2xl mb-2 ${
-                level === "easy" ? "text-lime-400" :
-                level === "medium" ? "text-lime-500" :
-                "text-lime-600"
+              <span className={`text-xl md:text-2xl mb-2 ${
+                level === "easy"
+                  ? "text-lime-400"
+                  : level === "medium"
+                  ? "text-lime-500"
+                  : "text-lime-600"
               }`}>
                 {level === "easy" ? "👶" : level === "medium" ? "🧠" : "🏆"}
               </span>
               <h2 className="text-lg font-bold text-gray-800 capitalize">{level}</h2>
-              <p className="text-gray-500 text-sm mt-1">
-                {level === "easy" ? "Basic facts" : 
-                 level === "medium" ? "Detailed analysis" : 
-                 "Expert insights"}
+              <p className="text-gray-500 text-[10px] mt-1">
+                {level === "easy" ? "Basic facts" :
+                  level === "medium" ? "Detailed analysis" :
+                    "Expert insights"}
               </p>
             </div>
           </div>
         ))}
-      </div>
+      </div></div>
 
       {/* Upper Search Input - Hidden when chat section appears */}
       {messages.length === 0 && (
@@ -125,7 +143,7 @@ export default function FootballAssistant() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={handleKeyPress}
             />
-            <button 
+            <button
               onClick={handleSearch}
               className="text-white bg-lime-500 hover:bg-lime-600 p-2 rounded-full transition-colors"
               disabled={isLoading}
@@ -148,7 +166,7 @@ export default function FootballAssistant() {
             </span>
           </div>
 
-          <div 
+          <div
             ref={chatContainerRef}
             className="flex flex-col space-y-4 h-64 sm:h-80 overflow-y-auto p-3 mb-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -161,21 +179,18 @@ export default function FootballAssistant() {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${
-                  message.sender === "user" ? "justify-end" : "justify-start"
-                }`}
+                className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                    message.sender === "user"
+                  className={`max-w-[80%] rounded-lg px-4 py-2 ${message.sender === "user"
                       ? "bg-lime-500 text-white"
                       : "bg-white border border-gray-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center mb-1">
-                    <span className={`text-xs font-medium ${
-                      message.sender === "user" ? "text-lime-100" : "text-gray-500"
-                    }`}>
+                    <span className={`text-xs font-medium ${message.sender === "user" ? "text-lime-100" : "text-gray-500"
+                      }`}>
                       {message.sender === "user" ? "You" : "Football Expert"}
                     </span>
                   </div>

@@ -1,8 +1,8 @@
 'use client';
 
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/Admin/AdminLayout';
 import Navbar from '@/components/Navbar';
-import Notifications from '@/components/Notifications';
+import Notifications from '@/components/Admin/Notifications';
 
 import { Toaster } from 'react-hot-toast';
 

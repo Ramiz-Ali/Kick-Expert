@@ -1,8 +1,8 @@
 'use client';
 
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/Admin/AdminLayout';
 import Navbar from '@/components/Navbar';
-import Payout from '@/components/Payout';
+import Payout from '@/components/Admin/Payout';
 import { Toaster } from 'react-hot-toast';
 
 

@@ -5,12 +5,12 @@ import { useState } from "react";
 const articles = [
   {
     id: 1,
-    category: "Basketball",
-    image: "/images/image3.png",
-    author: "Jake Will.",
-    date: "04 June 2023",
-    title: "5 Exercises Basketball Players Should Be Using To Develop Strength",
-    desc: "This article was written by Jake Willhoite from Healthlisted.com Strength in basketball isn’t all about a massive body mass or ripped muscles.",
+    category: "Badminton",
+    image: "/images/image5.png",
+    author: "Bong Lozada",
+    date: "01 June 2023",
+    title: "‘Outdoor’ Badminton Gets Support From Local Federation",
+    desc: "The Badminton World Federation is developing Air Badminton and the country’s governing body, Philippine Badminton Association.",
   },
   {
     id: 2,
@@ -30,17 +30,9 @@ const articles = [
     title: "‘Outdoor’ Badminton Gets Support From Local Federation",
     desc: "The Badminton World Federation is developing Air Badminton and the country’s governing body, Philippine Badminton Association.",
   },
+  
   {
     id: 4,
-    category: "Basketball",
-    image: "/images/image3.png",
-    author: "Jake Will.",
-    date: "04 June 2023",
-    title: "5 Exercises Basketball Players Should Be Using To Develop Strength",
-    desc: "This article was written by Jake Willhoite from Healthlisted.com Strength in basketball isn’t all about a massive body mass or ripped muscles.",
-  },
-  {
-    id: 5,
     category: "Hockey",
     image: "/images/image4.png",
     author: "Foxi.zacon",
@@ -49,13 +41,22 @@ const articles = [
     desc: "The Vegas Golden Knights will play the Florida Panthers in the Stanley Cup Final beginning Saturday.",
   },
   {
-    id: 6,
+    id: 5,
     category: "Badminton",
     image: "/images/image5.png",
     author: "Bong Lozada",
     date: "01 June 2023",
     title: "‘Outdoor’ Badminton Gets Support From Local Federation",
     desc: "The Badminton World Federation is developing Air Badminton and the country’s governing body, Philippine Badminton Association.",
+  },
+  {
+    id: 6,
+    category: "Hockey",
+    image: "/images/image4.png",
+    author: "Foxi.zacon",
+    date: "03 June 2023",
+    title: "Golden Knights out to fulfill owner’s quest to win Stanley Cup in 6th year",
+    desc: "The Vegas Golden Knights will play the Florida Panthers in the Stanley Cup Final beginning Saturday.",
   },
 ];
 

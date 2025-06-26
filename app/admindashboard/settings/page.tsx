@@ -1,8 +1,8 @@
 'use client';
 
-import AdminLayout from '@/components/AdminLayout';
+import AdminLayout from '@/components/Admin/AdminLayout';
 import Navbar from '@/components/Navbar';
-import AdminSettings from '@/components/Settings';
+import AdminSettings from '@/components/Admin/Settings';
 
 
 

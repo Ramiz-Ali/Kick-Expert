@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 // import { auth, db } from '@/lib/firebase';
 // import { doc, getDoc } from "firebase/firestore";
 // import toast, { Toaster } from 'react-hot-toast';
-import AdminLayout from '../../components/AdminLayout';
+import AdminLayout from '../../components/Admin/AdminLayout';
 import Navbar from '@/components/Navbar';
 // import { FirestoreUser } from '@/types/user';
 import { FiUsers, FiFileText, FiBarChart2, FiSettings, FiShield, FiHeadphones } from 'react-icons/fi';
