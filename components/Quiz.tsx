@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 
 interface Question {
   question_text: string;
@@ -284,13 +285,14 @@ export default function QuizDashboard() {
                 >
                   Restart Quiz
                 </motion.button>
+                <Link href={"/"} >
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl shadow-md transition-all"
                 >
                   Back to Dashboard
-                </motion.button>
+                </motion.button></Link>
               </div>
             </motion.div>
           )}
