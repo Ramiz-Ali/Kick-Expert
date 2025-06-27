@@ -72,7 +72,7 @@ export default function QuizDashboard() {
     }
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = () => {                              
     if (selectedChoice === currentQuestion.correct_answer) {
       setScore(score + 1);
     }
