@@ -166,8 +166,8 @@ export default function SportsArticleSection() {
       <div className="relative overflow-hidden">
         <div className={`grid gap-8 grid-cols-1 md:grid-cols-3 transition-transform duration-300 ease-in-out`}>
           {visibleArticles.map((item) => (
-            <div key={item.id} className="space-y-4  group">
-              <div className="relative h-[270px] overflow-hidden rounded-lg">
+            <div key={item.id} className="space-y-4 group flex flex-col h-full">
+              <div className="relative h-[270px] overflow-hidden rounded-lg flex-shrink-0">
                 <Image
                   src={item.image}
                   alt={item.title}
@@ -180,27 +180,31 @@ export default function SportsArticleSection() {
                 </span>
               </div>
 
-              <div className="flex items-center space-x-3 text-sm text-gray-600">
-                <Image
-                  src={item.authorImage}
-                  alt={item.author}
-                  width={24}
-                  height={24}
-                  className="rounded-full w-6 h-6 object-cover"
-                />
-                <span>{item.author}</span>
-                <span className="text-gray-500">{item.date}</span>
-              </div>
+              <div className="flex flex-col flex-grow">
+                <div className="flex items-center space-x-3 text-sm text-gray-600 mb-2">
+                  <Image
+                    src={item.authorImage}
+                    alt={item.author}
+                    width={24}
+                    height={24}
+                    className="rounded-full w-6 h-6 object-cover"
+                  />
+                  <span>{item.author}</span>
+                  <span className="text-gray-500">{item.date}</span>
+                </div>
 
-              <h3 className="text-md font-semibold text-gray-800">{item.title}</h3>
-              <p className="text-sm text-gray-600">{item.desc}</p>
-              
-              <Link 
-                href={`/articleview?id=${item.id}`} 
-                className="inline-block  text-lime-600 hover:text-lime-700 font-medium text-sm transition-colors"
-              >
-                View More →
-              </Link>
+                <h3 className="text-md font-semibold text-gray-800 mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-600 mb-4 flex-grow">{item.desc}</p>
+                
+                <div className="mt-auto">
+                  <Link 
+                    href={`/articleview?id=${item.id}`} 
+                    className="inline-block text-lime-600 hover:text-lime-700 font-medium text-sm transition-colors"
+                  >
+                    View More →
+                  </Link>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -247,8 +251,8 @@ export default function SportsArticleSection() {
                   key={testimonial.id}
                   className={`absolute top-0 left-0 w-full transition-all duration-500 ease-in-out ${activeTestimonial === index ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}
                 >
-                  <div className="relative bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-                    <div className="flex items-start">
+                  <div className="relative bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 h-full">
+                    <div className="flex items-start h-full">
                       <Image
                         src={testimonial.image}
                         alt={testimonial.author}
@@ -256,10 +260,12 @@ export default function SportsArticleSection() {
                         height={60}
                         className="rounded-full mr-4 w-12 h-12 object-cover"
                       />
-                      <div>
-                        <p className="text-gray-600 italic text-sm">"{testimonial.quote}"</p>
-                        <p className="text-gray-800 font-medium mt-2">{testimonial.author}</p>
-                        <p className="text-gray-500 text-xs">{testimonial.location}</p>
+                      <div className="flex flex-col h-full">
+                        <p className="text-gray-600 italic text-sm flex-grow">"{testimonial.quote}"</p>
+                        <div>
+                          <p className="text-gray-800 font-medium mt-2">{testimonial.author}</p>
+                          <p className="text-gray-500 text-xs">{testimonial.location}</p>
+                        </div>
                       </div>
                     </div>
                     <div className="mt-4">
