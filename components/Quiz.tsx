@@ -73,7 +73,7 @@ export default function QuizDashboard() {
     }
   };
 
-  const handleNextQuestion = () => {                              
+  const handleNextQuestion = () => {
     if (selectedChoice === currentQuestion.correct_answer) {
       setScore(score + 1);
     }
@@ -99,23 +99,26 @@ export default function QuizDashboard() {
     <div className="min-h-fit mt-14 bg-gray-50 text-gray-800 p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-lime-400 to-lime-500 p-6">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-white">Champions League Quiz</h1>
-            <div className="flex items-center space-x-4">
-              <div className="bg-white bg-opacity-20 px-4 py-1 rounded-full">
+        <div className="bg-gradient-to-r from-lime-400 to-lime-500 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-white text-center sm:text-left">
+              Champions League Quiz
+            </h1>
+            <div className="flex items-center justify-center sm:justify-end space-x-3 sm:space-x-4">
+              <div className="bg-white bg-opacity-20 px-3 py-1 rounded-full flex items-center">
                 <span className="font-bold text-black">{score}</span>
                 <span className="text-black opacity-80">/{questions.length}</span>
               </div>
-              <div className="w-32 h-2 bg-white  bg-opacity-30 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-lime-700 transition-all duration-500" 
+              <div className="w-24 sm:w-32 h-2 bg-white bg-opacity-30 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-lime-700 transition-all duration-500"
                   style={{ width: `${progress}%` }}
                 />
               </div>
             </div>
           </div>
         </div>
+
 
         {/* Quiz Content */}
         <div className="p-6">
@@ -134,11 +137,10 @@ export default function QuizDashboard() {
                     <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600">
                       {currentQuestion.category}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      currentQuestion.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-                      currentQuestion.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
+                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${currentQuestion.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                        currentQuestion.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
+                      }`}>
                       {currentQuestion.difficulty}
                     </span>
                   </div>
@@ -160,15 +162,14 @@ export default function QuizDashboard() {
                       whileHover={!showResult ? { scale: 1.02 } : {}}
                       whileTap={!showResult ? { scale: 0.98 } : {}}
                       onClick={() => handleChoiceSelect(choice)}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        showResult && choice === currentQuestion.correct_answer ? 
+                      className={`p-4 rounded-xl border-2 text-left transition-all ${showResult && choice === currentQuestion.correct_answer ?
                           'border-green-500 bg-green-50' :
-                        showResult && selectedChoice === choice ? 
-                          'border-red-500 bg-red-50' :
-                        selectedChoice === choice ? 
-                          'border-lime-400 bg-lime-50' :
-                          'border-gray-200 hover:border-lime-300 bg-white'
-                      }`}
+                          showResult && selectedChoice === choice ?
+                            'border-red-500 bg-red-50' :
+                            selectedChoice === choice ?
+                              'border-lime-400 bg-lime-50' :
+                              'border-gray-200 hover:border-lime-300 bg-white'
+                        }`}
                       disabled={showResult}
                     >
                       <div className="flex items-center">
@@ -176,10 +177,10 @@ export default function QuizDashboard() {
                         {showResult && choice === currentQuestion.correct_answer && (
                           <span className="ml-2 text-green-500">✓</span>
                         )}
-                        {showResult && selectedChoice === choice && 
-                         selectedChoice !== currentQuestion.correct_answer && (
-                          <span className="ml-2 text-red-500">✗</span>
-                        )}
+                        {showResult && selectedChoice === choice &&
+                          selectedChoice !== currentQuestion.correct_answer && (
+                            <span className="ml-2 text-red-500">✗</span>
+                          )}
                       </div>
                     </motion.button>
                   ))}
@@ -268,9 +269,9 @@ export default function QuizDashboard() {
 
               <h2 className="text-2xl font-bold mb-4 text-gray-800">
                 {score === questions.length ? "🏆 Perfect Score!" :
-                 score >= questions.length * 0.8 ? "🎉 Excellent!" :
-                 score >= questions.length * 0.6 ? "👍 Good Job!" : 
-                 "💪 Keep Practicing!"}
+                  score >= questions.length * 0.8 ? "🎉 Excellent!" :
+                    score >= questions.length * 0.6 ? "👍 Good Job!" :
+                      "💪 Keep Practicing!"}
               </h2>
               <p className="text-gray-600 mb-6">
                 You answered {score} out of {questions.length} questions correctly
@@ -286,13 +287,13 @@ export default function QuizDashboard() {
                   Restart Quiz
                 </motion.button>
                 <Link href={"/"} >
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl shadow-md transition-all"
-                >
-                  Back to Dashboard
-                </motion.button></Link>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl shadow-md transition-all"
+                  >
+                    Back to Dashboard
+                  </motion.button></Link>
               </div>
             </motion.div>
           )}
