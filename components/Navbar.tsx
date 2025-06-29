@@ -91,11 +91,11 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center" onClick={() => setMenuOpen(false)}>
           <div className="flex items-center">
-            <Image 
-              src="/logo.png" 
-              alt="Logo" 
-              width={40} 
-              height={40} 
+            <Image
+              src="/logo.png"
+              alt="Logo"
+              width={40}
+              height={40}
               className="w-8 h-8 md:w-10 md:h-10"
             />
             <span className="ml-2 text-lime-400 font-bold text-lg md:text-xl">
@@ -108,26 +108,24 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-6">
           <button
             onClick={() => scrollToSection("chat-assistant")}
-            className={`px-3 py-1 rounded-md transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500 ' : ''}`}
+            className={`px-3 py-1 rounded-md font-bold transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500 ' : ''}`}
           >
             Ask AI
           </button>
           <Link href="/quiz">
-          <button
-            className={`px-3 py-1 rounded-md transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500' : ''}`}
-          >
-            Quiz
-          </button></Link>
-          <Link href={"/livecompetition"}>
-          <button
-        
-            className="bg-lime-400 hover:bg-lime-500 text-white px-4 py-2 rounded-full flex items-center shadow-lg transition-colors"
-          >
-            LIVE COMPETITION
-            <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-              LIVE
-            </span>
-          </button></Link>
+            <button
+              className={`px-3 py-1 rounded-md font-bold transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500' : ''}`}
+            >
+              Quiz
+            </button></Link>
+          <Link href="/livecompetition">
+            <button
+              className={`px-3 py-1 rounded-md font-bold transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500' : ''}`}
+            >
+              Live Competition
+            </button>
+          </Link>
+
         </div>
 
         {/* Right Icons - Desktop */}
@@ -135,9 +133,8 @@ export default function Navbar() {
           <div className="relative flex">
             {/* Search Bar */}
             <div
-              className={`absolute right-8 top-[-10] bg-white border border-gray-500 rounded-full overflow-hidden transition-all duration-300 ease-in-out ${
-                isOpen ? "w-fit opacity-100" : "opacity-0"
-              }`}
+              className={`absolute right-8 top-[-10] bg-white border border-gray-500 rounded-full overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "w-fit opacity-100" : "opacity-0"
+                }`}
               style={{ transformOrigin: 'right center' }}
             >
               <div className="flex items-center px-4 py-2">
@@ -155,16 +152,15 @@ export default function Navbar() {
             {/* Search Button */}
             <button
               onClick={toggleSearch}
-              className={`text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors z-10 ${
-                isOpen ? "text-lime-500" : ""
-              }`}
+              className={`text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors z-10 ${isOpen ? "text-lime-500" : ""
+                }`}
               aria-label="Search"
             >
               <FaSearch />
             </button>
           </div>
-          
-          <button 
+
+          <button
             className="text-gray-600 hover:text-lime-500 cursor-pointer text-lg transition-colors relative"
             aria-label="Notifications"
           >
@@ -204,9 +200,8 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
                   <Link
                     href="/profile"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
-                      pathname === '/profile' ? 'bg-lime-50 text-lime-600' : ''
-                    }`}
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/profile' ? 'bg-lime-50 text-lime-600' : ''
+                      }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaUserCircle className="mr-3 text-lime-500 text-lg" />
@@ -214,9 +209,8 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/dashboard"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
-                      pathname === '/dashboard' ? 'bg-lime-50 text-lime-600' : ''
-                    }`}
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/dashboard' ? 'bg-lime-50 text-lime-600' : ''
+                      }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <MdDashboard className="mr-3 text-lime-500 text-lg" />
@@ -224,9 +218,8 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/about"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
-                      pathname === '/about' ? 'bg-lime-50 text-lime-600' : ''
-                    }`}
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/about' ? 'bg-lime-50 text-lime-600' : ''
+                      }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaInfoCircle className="mr-3 text-lime-500 text-lg" />
@@ -234,9 +227,8 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/policy"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
-                      pathname === '/policy' ? 'bg-lime-50 text-lime-600' : ''
-                    }`}
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/policy' ? 'bg-lime-50 text-lime-600' : ''
+                      }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaShieldAlt className="mr-3 text-lime-500 text-lg" />
@@ -244,9 +236,8 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/contact"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${
-                      pathname === '/contact' ? 'bg-lime-50 text-lime-600' : ''
-                    }`}
+                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/contact' ? 'bg-lime-50 text-lime-600' : ''
+                      }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaEnvelope className="mr-3 text-lime-500 text-lg" />
@@ -300,12 +291,20 @@ export default function Navbar() {
             >
               Ask AI
             </button>
-            <button
-              onClick={() => scrollToSection("quiz-section")}
-              className="block w-full text-left py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
-            >
-              Quiz
-            </button>
+            <Link href="/quiz">
+              <button
+                className="block w-full text-left py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+              >
+                Quiz
+              </button></Link>
+            <Link href="/livecompetition">
+              <button
+                className="block w-full text-left py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                Live Competition
+              </button>
+            </Link>
             {user && (
               <>
                 <Link
@@ -381,17 +380,7 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="px-4 py-3 border-t border-gray-200">
-            <button
-              onClick={() => scrollToSection("live-competition")}
-              className="w-full py-2 px-4 bg-lime-400 hover:bg-lime-500 text-white rounded-full flex items-center justify-center shadow-lg transition-colors"
-            >
-              LIVE COMPETITION
-              <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                LIVE
-              </span>
-            </button>
-          </div>
+
         </div>
       )}
     </nav>
