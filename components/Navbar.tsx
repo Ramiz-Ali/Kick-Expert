@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { MdMenu, MdClose, MdDashboard } from "react-icons/md";
 import toast from 'react-hot-toast';
+import { Bot, Target, Trophy } from "lucide-react";
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -85,6 +86,14 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
+  // Check if a nav item is active
+  const isActive = (href: string, section?: string) => {
+    if (section && pathname === "/") {
+      return window.location.hash === `#${section}`;
+    }
+    return pathname === href;
+  };
+
   return (
     <nav className="bg-white w-full z-50 shadow-sm fixed top-0">
       <div className="flex justify-between items-center px-4 py-3 md:px-8 lg:px-10">
@@ -105,44 +114,62 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-4">
           <button
             onClick={() => scrollToSection("chat-assistant")}
-            className={`px-3 py-1 rounded-md font-bold transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500 ' : ''}`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+              isActive("/", "chat-assistant") 
+                ? "bg-lime-100 text-lime-700 shadow-inner"
+                : "text-gray-600 hover:bg-lime-50 hover:text-lime-600"
+            }`}
           >
-            Ask AI
+            <Bot className="w-5 h-5 mb-[3px]" />
+            <span>Ask AI</span>
           </button>
+
           <Link href="/quiz">
             <button
-              className={`px-3 py-1 rounded-md font-bold transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500' : ''}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                isActive("/quiz")
+                  ? "bg-lime-100 text-lime-700 shadow-inner"
+                  : "text-gray-600 hover:bg-lime-50 hover:text-lime-600"
+              }`}
             >
-              Quiz
-            </button></Link>
-          <Link href="/livecompetition">
-            <button
-              className={`px-3 py-1 rounded-md font-bold transition-colors ${pathname === '/' ? 'text-gray-600 hover:text-lime-500' : ''}`}
-            >
-              Live Competition
+              <Target className="w-5 h-5" />
+              <span>Quiz</span>
             </button>
           </Link>
 
+          <Link href="/livecompetition">
+            <button
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
+                isActive("/livecompetition")
+                  ? "bg-lime-100 text-lime-700 shadow-inner"
+                  : "bg-lime-50 text-lime-600 hover:bg-lime-100"
+              }`}
+            >
+              <Trophy className="w-5 h-5" />
+              <span>Competitions</span>
+              <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-red-500 text-white animate-pulse">Live</span>
+            </button>
+          </Link>
         </div>
 
         {/* Right Icons - Desktop */}
-        <div className="hidden lg:flex items-center space-x-6">
+        <div className="hidden lg:flex items-center gap-6">
           <div className="relative flex">
             {/* Search Bar */}
             <div
-              className={`absolute right-8 top-[-10] bg-white border border-gray-500 rounded-full overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "w-fit opacity-100" : "opacity-0"
-                }`}
-              style={{ transformOrigin: 'right center' }}
+              className={`absolute right-[-10px] bottom-[-10]   bg-white border border-gray-200 rounded-full overflow-hidden transition-all duration-300 ease-in-out shadow-md ${
+                isOpen ? "w-56 opacity-100" : "w-0 opacity-0"
+              }`}
             >
               <div className="flex items-center px-4 py-2">
                 <input
                   ref={searchInputRef}
                   type="text"
                   placeholder="Search ..."
-                  className="flex-grow outline-none text-gray-700 placeholder-gray-600 text-sm"
+                  className="flex-grow outline-none text-gray-700 placeholder-gray-500 text-sm bg-transparent"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -152,8 +179,9 @@ export default function Navbar() {
             {/* Search Button */}
             <button
               onClick={toggleSearch}
-              className={`text-gray-600 hover:text-lime-500 text-lg cursor-pointer transition-colors z-10 ${isOpen ? "text-lime-500" : ""
-                }`}
+              className={`text-gray-600 hover:text-lime-600 text-lg cursor-pointer transition-colors z-10 ${
+                isOpen ? "text-lime-600" : ""
+              }`}
               aria-label="Search"
             >
               <FaSearch />
@@ -161,11 +189,11 @@ export default function Navbar() {
           </div>
 
           <button
-            className="text-gray-600 hover:text-lime-500 cursor-pointer text-lg transition-colors relative"
+            className="text-gray-600 hover:text-lime-600 cursor-pointer text-lg transition-colors relative"
             aria-label="Notifications"
           >
             <FaBell />
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center animate-bounce">
               3
             </span>
           </button>
@@ -174,15 +202,15 @@ export default function Navbar() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center space-x-1 focus:outline-none"
+                className="flex items-center gap-2 focus:outline-none group"
                 aria-label="User menu"
               >
-                <div className="p-1 rounded-full text-black">
+                <div className="p-1 rounded-full  text-lime-600 transition-colors">
                   <FaUser className="text-xl" />
                 </div>
-                <span className="text-gray-600">{userName || "User"}</span>
+                <span className="text-gray-700 font-medium">{userName || "User"}</span>
                 <svg
-                  className={`w-4 h-4 text-gray-700 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                  className={`w-4 h-4 text-gray-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -197,11 +225,14 @@ export default function Navbar() {
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden">
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
                   <Link
                     href="/profile"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/profile' ? 'bg-lime-50 text-lime-600' : ''
-                      }`}
+                    className={`px-4 py-3 flex items-center transition-colors ${
+                      isActive("/profile")
+                        ? 'bg-lime-100 text-lime-700'
+                        : 'text-gray-700 hover:bg-lime-50'
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaUserCircle className="mr-3 text-lime-500 text-lg" />
@@ -209,8 +240,11 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/dashboard"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/dashboard' ? 'bg-lime-50 text-lime-600' : ''
-                      }`}
+                    className={`px-4 py-3 flex items-center transition-colors ${
+                      isActive("/dashboard")
+                        ? 'bg-lime-100 text-lime-700'
+                        : 'text-gray-700 hover:bg-lime-50'
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <MdDashboard className="mr-3 text-lime-500 text-lg" />
@@ -218,8 +252,11 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/about"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/about' ? 'bg-lime-50 text-lime-600' : ''
-                      }`}
+                    className={`px-4 py-3 flex items-center transition-colors ${
+                      isActive("/about")
+                        ? 'bg-lime-100 text-lime-700'
+                        : 'text-gray-700 hover:bg-lime-50'
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaInfoCircle className="mr-3 text-lime-500 text-lg" />
@@ -227,8 +264,11 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/policy"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/policy' ? 'bg-lime-50 text-lime-600' : ''
-                      }`}
+                    className={`px-4 py-3 flex items-center transition-colors ${
+                      isActive("/policy")
+                        ? 'bg-lime-100 text-lime-700'
+                        : 'text-gray-700 hover:bg-lime-50'
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaShieldAlt className="mr-3 text-lime-500 text-lg" />
@@ -236,8 +276,11 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/contact"
-                    className={`px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center transition-colors ${pathname === '/contact' ? 'bg-lime-50 text-lime-600' : ''
-                      }`}
+                    className={`px-4 py-3 flex items-center transition-colors ${
+                      isActive("/contact")
+                        ? 'bg-lime-100 text-lime-700'
+                        : 'text-gray-700 hover:bg-lime-50'
+                    }`}
                     onClick={() => setDropdownOpen(false)}
                   >
                     <FaEnvelope className="mr-3 text-lime-500 text-lg" />
@@ -245,10 +288,10 @@ export default function Navbar() {
                   </Link>
                   <div className="border-t border-gray-200">
                     <button
-                      className="px-4 py-3 text-gray-700 hover:bg-lime-50 flex items-center w-full text-left transition-colors"
+                      className="px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 flex items-center w-full text-left transition-colors"
                       onClick={handleLogout}
                     >
-                      <FaSignOutAlt className="mr-3 text-lime-500 text-lg" />
+                      <FaSignOutAlt className="mr-3 text-red-500 text-lg" />
                       <span>Logout</span>
                     </button>
                   </div>
@@ -258,12 +301,12 @@ export default function Navbar() {
           ) : (
             <div className="flex gap-3">
               <Link href="/login">
-                <button className="py-2 px-4 flex items-center justify-center bg-lime-400 hover:bg-lime-500 rounded-md transition-colors">
+                <button className="py-2 px-4 flex items-center justify-center bg-lime-100 hover:bg-lime-200 text-lime-700 rounded-lg transition-colors font-medium">
                   Login
                 </button>
               </Link>
               <Link href="/signup">
-                <button className="py-2 px-4 flex items-center justify-center bg-lime-600 hover:bg-lime-700 text-white rounded-md transition-colors">
+                <button className="py-2 px-4 flex items-center justify-center bg-lime-600 hover:bg-lime-700 text-white rounded-lg transition-colors font-medium shadow-md">
                   Signup
                 </button>
               </Link>
@@ -274,7 +317,7 @@ export default function Navbar() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="lg:hidden text-3xl text-lime-600 focus:outline-none"
+          className="lg:hidden text-2xl text-lime-600 focus:outline-none p-1 rounded-full hover:bg-lime-100 transition-colors"
           aria-label="Toggle menu"
         >
           {menuOpen ? <MdClose /> : <MdMenu />}
@@ -283,64 +326,128 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-200">
-          <div className="px-4 py-3 space-y-4">
+        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
+          <div className="px-4 py-3 space-y-1">
             <button
               onClick={() => scrollToSection("chat-assistant")}
-              className="block w-full text-left py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+              className={`block w-full text-left py-3 px-4 rounded-lg font-medium transition-colors ${
+                isActive("/", "chat-assistant")
+                  ? "bg-lime-100 text-lime-700"
+                  : "text-gray-700 hover:bg-lime-50"
+              }`}
             >
-              Ask AI
+              <div className="flex items-center gap-3">
+                <Bot className="w-5 h-5" />
+                <span>Ask AI</span>
+              </div>
             </button>
+
             <Link href="/quiz">
               <button
-                className="block w-full text-left py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
-              >
-                Quiz
-              </button></Link>
-            <Link href="/livecompetition">
-              <button
-                className="block w-full text-left py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                className={`block w-full text-left py-3 px-4 rounded-lg font-medium transition-colors ${
+                  isActive("/quiz")
+                    ? "bg-lime-100 text-lime-700"
+                    : "text-gray-700 hover:bg-lime-50"
+                }`}
                 onClick={() => setMenuOpen(false)}
               >
-                Live Competition
+                <div className="flex items-center gap-3">
+                  <Target className="w-5 h-5" />
+                  <span>Quiz</span>
+                </div>
               </button>
             </Link>
+
+            <Link href="/livecompetition">
+              <button
+                className={`block w-full text-left py-3 px-4 rounded-lg font-medium transition-colors ${
+                  isActive("/livecompetition")
+                    ? "bg-lime-100 text-lime-700"
+                    : "text-gray-700 hover:bg-lime-50"
+                }`}
+                onClick={() => setMenuOpen(false)}
+              >
+                <div className="flex items-center gap-3">
+                  <Trophy className="w-5 h-5" />
+                  <span>Competitions</span>
+                  <span className="ml-auto px-2 py-0.5 text-xs rounded-full bg-red-500 text-white animate-pulse">
+                    Live
+                  </span>
+                </div>
+              </button>
+            </Link>
+
             {user && (
               <>
                 <Link
                   href="/profile"
-                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
+                    isActive("/profile")
+                      ? "bg-lime-100 text-lime-700"
+                      : "text-gray-700 hover:bg-lime-50"
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <span>Profile</span>
+                  <div className="flex items-center gap-3">
+                    <FaUserCircle className="w-5 h-5" />
+                    <span>Profile</span>
+                  </div>
                 </Link>
                 <Link
                   href="/dashboard"
-                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
+                    isActive("/dashboard")
+                      ? "bg-lime-100 text-lime-700"
+                      : "text-gray-700 hover:bg-lime-50"
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <span>Dashboard</span>
+                  <div className="flex items-center gap-3">
+                    <MdDashboard className="w-5 h-5" />
+                    <span>Dashboard</span>
+                  </div>
                 </Link>
                 <Link
                   href="/about"
-                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
+                    isActive("/about")
+                      ? "bg-lime-100 text-lime-700"
+                      : "text-gray-700 hover:bg-lime-50"
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <span>About</span>
+                  <div className="flex items-center gap-3">
+                    <FaInfoCircle className="w-5 h-5" />
+                    <span>About</span>
+                  </div>
                 </Link>
                 <Link
                   href="/policy"
-                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
+                    isActive("/policy")
+                      ? "bg-lime-100 text-lime-700"
+                      : "text-gray-700 hover:bg-lime-50"
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <span>Policy</span>
+                  <div className="flex items-center gap-3">
+                    <FaShieldAlt className="w-5 h-5" />
+                    <span>Policy</span>
+                  </div>
                 </Link>
                 <Link
                   href="/contact"
-                  className="flex items-center py-2 text-gray-700 hover:text-lime-500 font-medium transition-colors"
+                  className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
+                    isActive("/contact")
+                      ? "bg-lime-100 text-lime-700"
+                      : "text-gray-700 hover:bg-lime-50"
+                  }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  <span>Contact</span>
+                  <div className="flex items-center gap-3">
+                    <FaEnvelope className="w-5 h-5" />
+                    <span>Contact</span>
+                  </div>
                 </Link>
               </>
             )}
@@ -349,14 +456,14 @@ export default function Navbar() {
           <div className="px-4 py-3 border-t border-gray-200">
             {user ? (
               <>
-                <div className="flex items-center justify-between py-2">
+                <div className="flex items-center justify-between py-3 px-2">
                   <span className="text-gray-700 font-bold">Welcome, {userName || "User"}</span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors mt-2 flex items-center justify-center"
+                  className="w-full py-3 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors mt-2 flex items-center justify-center gap-2 font-medium"
                 >
-                  <FaSignOutAlt className="mr-2" />
+                  <FaSignOutAlt />
                   Logout
                 </button>
               </>
@@ -364,14 +471,14 @@ export default function Navbar() {
               <div className="grid grid-cols-2 gap-3">
                 <Link
                   href="/login"
-                  className="py-2 px-4 bg-lime-400 hover:bg-lime-500 text-center rounded-md transition-colors flex items-center justify-center"
+                  className="py-3 px-4 bg-lime-100 hover:bg-lime-200 text-lime-700 text-center rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
                   onClick={() => setMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   href="/signup"
-                  className="py-2 px-4 bg-lime-600 hover:bg-lime-700 text-white text-center rounded-md transition-colors flex items-center justify-center"
+                  className="py-3 px-4 bg-lime-600 hover:bg-lime-700 text-white text-center rounded-lg transition-colors flex items-center justify-center gap-2 font-medium shadow-md"
                   onClick={() => setMenuOpen(false)}
                 >
                   Signup
@@ -379,8 +486,6 @@ export default function Navbar() {
               </div>
             )}
           </div>
-
-
         </div>
       )}
     </nav>
