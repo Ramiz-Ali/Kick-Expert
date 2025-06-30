@@ -85,14 +85,29 @@ export default function Navbar() {
     }
     setMenuOpen(false);
   };
+  const [currentHash, setCurrentHash] = useState<string>("");
+
+useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const updateHash = () => setCurrentHash(window.location.hash);
+
+  window.addEventListener("hashchange", updateHash);
+
+  // Initial set on mount
+  updateHash();
+
+  return () => window.removeEventListener("hashchange", updateHash);
+}, []);
 
   // Check if a nav item is active
-  const isActive = (href: string, section?: string) => {
-    if (section && pathname === "/") {
-      return window.location.hash === `#${section}`;
-    }
-    return pathname === href;
-  };
+const isActive = (href: string, section?: string) => {
+  if (section && pathname === "/") {
+    return currentHash === `#${section}`;
+  }
+  return pathname === href;
+};
+
 
   return (
     <nav className="bg-white w-full z-50 shadow-sm fixed top-0">
