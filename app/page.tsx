@@ -34,7 +34,7 @@ export default function Home() {
         <div className="relative z-10 flex items-center justify-center h-full flex-col text-center px-4">
           <FootballExample />
         </div>
-        <div className="absolute inset-0 flex items-center md:flex">
+        {/* <div className="absolute inset-0 flex items-center md:flex">
           <Image
             src="/footbal.png"
             alt="Football"
@@ -42,7 +42,7 @@ export default function Home() {
             height={400}
             className="object-cover grayscale-[20%] opacity-70 brightness-110"
           />
-        </div>
+        </div> */}
         <div className="absolute top-0 right-0 h-full hidden md:block">
           <Image
             src="/Decore.png"

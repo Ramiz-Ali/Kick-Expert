@@ -11,7 +11,7 @@ export default function Contact() {
     <div className="relative bg-zinc-50  min-h-screen">
       <Navbar/>
       {/* Background Football Image - Fixed and behind content */}
-      <div className="fixed inset-0 -z-10 overflow-hidden opacity-20">
+      {/* <div className="fixed inset-0 -z-10 overflow-hidden opacity-20">
         <Image
           src="/footbal.png"
           alt="Football background"
@@ -19,7 +19,7 @@ export default function Contact() {
           className="object-cover grayscale-[20%] brightness-110"
           priority
         />
-      </div>
+      </div> */}
 
       {/* Main Content */}
       <main className="relative z-10">
