@@ -1,39 +1,23 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-// import { auth, db } from '@/lib/firebase';
-// import { collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { auth, db } from '@/lib/firebase';
+import { collection, getDocs, doc, setDoc, deleteDoc, getDoc } from "firebase/firestore";
 import toast, { Toaster } from 'react-hot-toast';
-// import { FirestoreUser } from '@/types/user';
+import { FirestoreUser } from '@/types/user';
 import { Pencil, Trash2, Search } from 'lucide-react';
 
-// Define a local user type since FirestoreUser is commented out
-interface User {
-  uid: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'user';
-  createdAt: string;
-}
-
 export default function RegisteredUsers() {
-  const [users, setUsers] = useState<User[]>([
-    { uid: "user1", name: "John Doe", email: "john.doe@example.com", role: "user", createdAt: new Date().toISOString() },
-    { uid: "user2", name: "Jane Smith", email: "jane.smith@example.com", role: "admin", createdAt: new Date().toISOString() },
-    { uid: "user3", name: "Bob Johnson", email: "bob.johnson@example.com", role: "user", createdAt: new Date().toISOString() },
-  ]); // Dummy user data
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(users);
+  const [users, setUsers] = useState<FirestoreUser[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<FirestoreUser[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false); // Set to false since no async fetching
-  const [editUser, setEditUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [editUser, setEditUser] = useState<FirestoreUser | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const router = useRouter();
 
-  // Commented out Firebase admin check and user fetching
   useEffect(() => {
-    /*
     const checkAdmin = async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -41,54 +25,46 @@ export default function RegisteredUsers() {
         router.push("/login");
         return;
       }
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (!userDoc.exists() || userDoc.data().role !== "admin") {
-        toast.error("Access denied. Admins only.");
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists() || userDoc.data().role !== "admin") {
+          toast.error("Access denied. Admins only.");
+          router.push("/");
+          return;
+        }
+        fetchUsers();
+      } catch (error) {
+        console.error("Error checking admin status:", error);
+        toast.error("Failed to verify admin status");
         router.push("/");
-        return;
       }
-      fetchUsers();
     };
+
+    const fetchUsers = async () => {
+      try {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        const usersList = usersSnapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            uid: doc.id,
+            name: data.name || 'No name',
+            email: data.email || 'No email',
+            role: data.role || 'user',
+            createdAt: data.createdAt || new Date().toISOString(),
+          } as FirestoreUser;
+        });
+        setUsers(usersList);
+        setFilteredUsers(usersList);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        toast.error("Failed to load users");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     checkAdmin();
-    */
-
-    // Simulate admin check with dummy logic
-    const isAdmin = true; // Assume admin for testing; set to false to test redirect
-    if (!isAdmin) {
-      toast.error("Access denied. Admins only.");
-      router.push("/");
-      return;
-    }
-    setFilteredUsers(users); // Initialize filtered users with dummy data
-    setLoading(false);
-  }, [router, users]);
-
-  // Commented out Firebase fetchUsers
-  /*
-  const fetchUsers = async () => {
-    try {
-      const usersSnapshot = await getDocs(collection(db, "users"));
-      const usersList = usersSnapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          uid: doc.id,
-          name: data.name || 'No name',
-          email: data.email || 'No email',
-          role: data.role || 'user',
-          createdAt: data.createdAt || new Date().toISOString(),
-          ...data
-        } as FirestoreUser;
-      });
-      setUsers(usersList);
-      setFilteredUsers(usersList);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      toast.error("Failed to load users");
-      setLoading(false);
-    }
-  };
-  */
+  }, [router]);
 
   // Safe search implementation
   useEffect(() => {
@@ -123,10 +99,7 @@ export default function RegisteredUsers() {
 
     const toastId = toast.loading("Updating user...");
     try {
-      // Simulate Firebase update
-      /*
       await setDoc(doc(db, "users", editUser.uid), editUser, { merge: true });
-      */
       setUsers(users.map(u => u.uid === editUser.uid ? editUser : u));
       setFilteredUsers(filteredUsers.map(u => u.uid === editUser.uid ? editUser : u));
       toast.success("User updated successfully", { id: toastId });
@@ -141,10 +114,7 @@ export default function RegisteredUsers() {
   const handleDelete = async (uid: string) => {
     const toastId = toast.loading("Deleting user...");
     try {
-      // Simulate Firebase delete
-      /*
       await deleteDoc(doc(db, "users", uid));
-      */
       setUsers(users.filter(u => u.uid !== uid));
       setFilteredUsers(filteredUsers.filter(u => u.uid !== uid));
       toast.success("User deleted successfully", { id: toastId });
@@ -201,7 +171,7 @@ export default function RegisteredUsers() {
         {/* Search Bar */}
         <div className="mb-6">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w- arty-5" />
             <input
               type="text"
               placeholder="Search by name, email, or role..."
@@ -265,8 +235,8 @@ export default function RegisteredUsers() {
 
         {/* Edit User Modal */}
         {editUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div className="bg-white  shadow-2xl rounded-lg p-6 w-full max-w-md">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Edit User</h2>
               <form onSubmit={handleUpdate} className="space-y-4">
                 <div>
@@ -310,7 +280,6 @@ export default function RegisteredUsers() {
                   </button>
                   <button
                     type="submit"
-                  
                     className="px-4 py-2 bg-lime-600 text-white rounded-lg hover:bg-lime-700"
                   >
                     Save
@@ -323,15 +292,15 @@ export default function RegisteredUsers() {
 
         {/* Delete Confirmation Modal */}
         {deleteConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-sm">
+          <div className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div className="bg-white shadow-2xl rounded-lg p-6 w-full max-w-sm">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Confirm Deletion</h2>
               <p className="text-gray-600 mb-6">Are you sure you want to delete this user?</p>
               <div className="flex justify-end space-x-2">
                 <button
                   onClick={() => setDeleteConfirm(null)}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                  >
+                >
                   Cancel
                 </button>
                 <button

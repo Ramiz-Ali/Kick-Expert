@@ -2,54 +2,55 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-// import { auth, db } from '@/lib/firebase';
-// import { doc, getDoc } from "firebase/firestore";
-// import toast, { Toaster } from 'react-hot-toast';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc } from "firebase/firestore";
+import toast, { Toaster } from 'react-hot-toast';
 import AdminLayout from '../../components/Admin/AdminLayout';
 import Navbar from '@/components/Navbar';
-// import { FirestoreUser } from '@/types/user';
+import { FirestoreUser } from '@/types/user';
 import { FiUsers, FiFileText, FiBarChart2, FiSettings, FiShield, FiHeadphones } from 'react-icons/fi';
 
 export default function AdminDashboard() {
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [user, setUser] = useState<FirestoreUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<FirestoreUser | null>(null);
   const router = useRouter();
 
-  /*
   useEffect(() => {
     const checkAdmin = async () => {
       const currentUser = auth.currentUser;
-      if (currentUser) {
-        try {
-          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data() as FirestoreUser;
-            if (userData.role !== 'admin') {
-              toast.error("Access denied. Admins only.");
-              router.push("/");
-            } else {
-              setUser(userData);
-              setLoading(false);
-            }
-          } else {
-            toast.error("User data not found.");
-            router.push("/login");
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-          toast.error("Failed to load user data.");
-          router.push("/login");
-        }
-      } else {
+      if (!currentUser) {
         toast.error("Please log in to access the admin dashboard.");
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (!userDoc.exists()) {
+          toast.error("User data not found.");
+          router.push("/login");
+          return;
+        }
+
+        const userData = userDoc.data() as FirestoreUser;
+        if (userData.role !== 'admin') {
+          toast.error("Access denied. Admins only.");
+          router.push("/");
+          return;
+        }
+
+        setUser(userData);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        toast.error("Failed to load user data.");
         router.push("/login");
       }
     };
+
     checkAdmin();
   }, [router]);
-  */
 
-  /*
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -76,7 +77,10 @@ export default function AdminDashboard() {
       </div>
     );
   }
-  */
+
+  if (!user) {
+    return null; // Safety check to avoid rendering before user data is set
+  }
 
   return (
     <div className="bg-gray-50 mt-16 min-h-screen">
@@ -134,7 +138,7 @@ export default function AdminDashboard() {
               {/* User Management */}
               <div 
                 className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => router.push('/admin/users')}
+              
               >
                 <div className="flex items-center space-x-4">
                   <div className="p-3 bg-indigo-100 rounded-full text-indigo-600">
@@ -150,7 +154,7 @@ export default function AdminDashboard() {
               {/* Content Management */}
               <div 
                 className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => router.push('/admin/content')}
+              
               >
                 <div className="flex items-center space-x-4">
                   <div className="p-3 bg-green-100 rounded-full text-green-600">
@@ -166,7 +170,7 @@ export default function AdminDashboard() {
               {/* Analytics */}
               <div 
                 className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => router.push('/admin/analytics')}
+               
               >
                 <div className="flex items-center space-x-4">
                   <div className="p-3 bg-purple-100 rounded-full text-purple-600">

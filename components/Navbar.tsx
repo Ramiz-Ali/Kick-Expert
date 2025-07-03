@@ -4,6 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import toast from 'react-hot-toast';
 import {
   FaSearch,
   FaBell,
@@ -13,24 +17,53 @@ import {
   FaInfoCircle,
   FaShieldAlt,
   FaEnvelope,
-  FaChartLine,
-  FaHome,
 } from "react-icons/fa";
 import { MdMenu, MdClose, MdDashboard } from "react-icons/md";
-import toast from 'react-hot-toast';
 import { Bot, Target, Trophy } from "lucide-react";
+import { FirestoreUser } from '@/types/user';
 
 export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>({ uid: "dummy-uid" });
-  const [userName, setUserName] = useState<string>("John Doe");
-  const [role, setRole] = useState<string>("user");
+  const [user, setUser] = useState<any>(null);
+  const [userName, setUserName] = useState<string>("");
+  const [role, setRole] = useState<string>("");
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [currentHash, setCurrentHash] = useState<string>("");
+
+  // Monitor auth state and fetch user data
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        try {
+          const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data() as FirestoreUser;
+            setUserName(userData.name || "User");
+            setRole(userData.role || "user");
+          } else {
+            console.error("User document not found");
+            setUserName("User");
+            setRole("user");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          toast.error("Failed to fetch user data");
+        }
+      } else {
+        setUser(null);
+        setUserName("");
+        setRole("");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -41,31 +74,40 @@ export default function Navbar() {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleSearch = () => {
-    setIsOpen(!isOpen);
-  };
+  // Handle hash changes for scroll navigation
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
+    const updateHash = () => setCurrentHash(window.location.hash);
+
+    window.addEventListener("hashchange", updateHash);
+    updateHash();
+
+    return () => window.removeEventListener("hashchange", updateHash);
+  }, []);
+
+  // Focus search input when opened
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [isOpen]);
 
+  const toggleSearch = () => {
+    setIsOpen(!isOpen);
+  };
+
   const handleLogout = async () => {
     try {
-      setUser(null);
-      setUserName("");
-      setRole("");
+      await signOut(auth);
       toast.success("Logged out successfully");
       setDropdownOpen(false);
       setMenuOpen(false);
-    } catch (error) {
-      console.error("Logout Error:", error);
+    } catch (error: any) {
+      console.error("Logout Error:", error.message);
       toast.error("Failed to log out");
     }
   };
@@ -85,29 +127,14 @@ export default function Navbar() {
     }
     setMenuOpen(false);
   };
-  const [currentHash, setCurrentHash] = useState<string>("");
-
-useEffect(() => {
-  if (typeof window === "undefined") return;
-
-  const updateHash = () => setCurrentHash(window.location.hash);
-
-  window.addEventListener("hashchange", updateHash);
-
-  // Initial set on mount
-  updateHash();
-
-  return () => window.removeEventListener("hashchange", updateHash);
-}, []);
 
   // Check if a nav item is active
-const isActive = (href: string, section?: string) => {
-  if (section && pathname === "/") {
-    return currentHash === `#${section}`;
-  }
-  return pathname === href;
-};
-
+  const isActive = (href: string, section?: string) => {
+    if (section && pathname === "/") {
+      return currentHash === `#${section}`;
+    }
+    return pathname === href;
+  };
 
   return (
     <nav className="bg-white w-full z-50 shadow-sm fixed top-0">
@@ -133,7 +160,7 @@ const isActive = (href: string, section?: string) => {
           <button
             onClick={() => scrollToSection("chat-assistant")}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
-              isActive("/", "chat-assistant") 
+              isActive("/", "chat-assistant")
                 ? "bg-lime-100 text-lime-700 shadow-inner"
                 : "text-gray-600 hover:bg-lime-50 hover:text-lime-600"
             }`}
@@ -175,7 +202,7 @@ const isActive = (href: string, section?: string) => {
           <div className="relative flex">
             {/* Search Bar */}
             <div
-              className={`absolute right-[-10px] bottom-[-10]   bg-white border border-gray-200 rounded-full overflow-hidden transition-all duration-300 ease-in-out shadow-md ${
+              className={`absolute right-[-10px] bottom-[-10] bg-white border border-gray-200 rounded-full overflow-hidden transition-all duration-300 ease-in-out shadow-md ${
                 isOpen ? "w-56 opacity-100" : "w-0 opacity-0"
               }`}
             >
@@ -220,7 +247,7 @@ const isActive = (href: string, section?: string) => {
                 className="flex items-center gap-2 focus:outline-none group"
                 aria-label="User menu"
               >
-                <div className="p-1 rounded-full  text-lime-600 transition-colors">
+                <div className="p-1 rounded-full text-lime-600 transition-colors">
                   <FaUser className="text-xl" />
                 </div>
                 <span className="text-gray-700 font-medium">{userName || "User"}</span>
@@ -253,6 +280,20 @@ const isActive = (href: string, section?: string) => {
                     <FaUserCircle className="mr-3 text-lime-500 text-lg" />
                     <span>Profile</span>
                   </Link>
+                  {role === "admin" && (
+                    <Link
+                      href="/admindashboard"
+                      className={`px-4 py-3 flex items-center transition-colors ${
+                        isActive("/admindashboard")
+                          ? 'bg-lime-100 text-lime-700'
+                          : 'text-gray-700 hover:bg-lime-50'
+                      }`}
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <MdDashboard className="mr-3 text-lime-500 text-lg" />
+                      <span>Admin Dashboard</span>
+                    </Link>
+                  )}
                   <Link
                     href="/dashboard"
                     className={`px-4 py-3 flex items-center transition-colors ${
@@ -348,7 +389,7 @@ const isActive = (href: string, section?: string) => {
               className={`block w-full text-left py-3 px-4 rounded-lg font-medium transition-colors ${
                 isActive("/", "chat-assistant")
                   ? "bg-lime-100 text-lime-700"
-                  : "text-gray-700 hover:bg-lime-50"
+                  : "text paroles-gray-700 hover:bg-lime-50"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -408,6 +449,22 @@ const isActive = (href: string, section?: string) => {
                     <span>Profile</span>
                   </div>
                 </Link>
+                {role === "admin" && (
+                  <Link
+                    href="/admindashboard"
+                    className={`block py-3 px-4 rounded-lg font-medium transition-colors ${
+                      isActive("/admindashboard")
+                        ? "bg-lime-100 text-lime-700"
+                        : "text-gray-700 hover:bg-lime-50"
+                    }`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <MdDashboard className="w-5 h-5" />
+                      <span>Admin Dashboard</span>
+                    </div>
+                  </Link>
+                )}
                 <Link
                   href="/dashboard"
                   className={`block py-3 px-4 rounded-lg font-medium transition-colors ${

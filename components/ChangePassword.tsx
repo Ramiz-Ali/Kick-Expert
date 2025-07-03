@@ -1,86 +1,92 @@
 'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter } from 'next/navigation';
-import { auth, db } from "@/lib/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import Image from "next/image";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { auth } from '@/lib/firebase';
+import { verifyPasswordResetCode, confirmPasswordReset } from "firebase/auth";
 import toast, { Toaster } from 'react-hot-toast';
+import Image from "next/image";
 import Link from "next/link";
-import { FirestoreUser } from '@/types/user';
 
-export default function Login() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+export default function ChangePassword() {
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [oobCode, setOobCode] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const validateForm = useCallback(() => {
-    if (!email.trim()) {
-      toast.error('Email is required');
+  // Extract and verify oobCode on mount
+  useEffect(() => {
+    const code = searchParams.get('oobCode');
+    console.log('Extracted oobCode from URL:', code);
+    if (!code) {
+      toast.error('Invalid or missing password reset code. Redirecting to login...');
+      setTimeout(() => router.replace('/login'), 2000);
+      return;
+    }
+    setOobCode(code);
+  }, [searchParams, router]);
+
+  const validateForm = () => {
+    if (!newPassword) {
+      toast.error('New password is required');
       return false;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error('Please enter a valid email address');
-      return false;
-    }
-    if (!password) {
-      toast.error('Password is required');
-      return false;
-    }
-    if (password.length < 6) {
+    if (newPassword.length < 6) {
       toast.error('Password must be at least 6 characters');
       return false;
     }
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return false;
+    }
     return true;
-  }, [email, password]);
+  };
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!oobCode) {
+      toast.error('Invalid password reset link. Please request a new one.');
+      return;
+    }
 
     if (!validateForm()) {
       return;
     }
 
-    setLoading(true);
-    const toastId = toast.loading('Logging in...');
+    setIsSubmitting(true);
+    const toastId = toast.loading('Updating password...');
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      console.log("Authenticated user:", { uid: user.uid, email: user.email });
+      // Verify the password reset code
+      console.log('Verifying oobCode:', oobCode);
+      await verifyPasswordResetCode(auth, oobCode);
+      // Update the password
+      console.log('Updating password with newPassword:', newPassword);
+      await confirmPasswordReset(auth, oobCode, newPassword);
+      console.log('Password updated successfully for oobCode:', oobCode);
 
-      const userDocRef = doc(db, "users", user.uid);
-      const userDoc = await getDoc(userDocRef);
-
-      if (!userDoc.exists()) {
-        console.error("User document not found in Firestore for UID:", user.uid);
-        throw new Error("User profile not found. Please contact support.");
-      }
-
-      const userData = userDoc.data() as FirestoreUser;
-      const role = userData.role || 'user';
-      console.log("User data from Firestore:", { ...userData, role });
-
-      toast.success('Logged in successfully!', { id: toastId });
+      toast.success('Password updated successfully! Redirecting to login...', { id: toastId });
+      setNewPassword("");
+      setConfirmPassword("");
       setTimeout(() => {
-        const targetRoute = role === "admin" ? "/admindashboard" : "/";
-        console.log(`Navigating to: ${targetRoute}`);
-        router.replace(targetRoute);
-      }, 1500);
+        console.log('Navigating to: /login');
+        router.replace('/login');
+      }, 2000);
     } catch (error: any) {
-      console.error("Login Error:", error.code, error.message);
-      let errorMessage = 'Login failed. Please try again.';
+      console.error('Password Change Error:', error.code, error.message);
+      let errorMessage = 'Failed to update password. Please try again.';
       switch (error.code) {
-        case 'auth/wrong-password':
-          errorMessage = 'Incorrect password. Please try again.';
+        case 'auth/invalid-action-code':
+          errorMessage = 'Invalid or expired reset link. Please request a new one.';
           break;
-        case 'auth/user-not-found':
-          errorMessage = 'No account found with this email.';
+        case 'auth/weak-password':
+          errorMessage = 'Password is too weak. Please choose a stronger password.';
           break;
-        case 'auth/invalid-email':
-          errorMessage = 'Invalid email address.';
+        case 'auth/expired-action-code':
+          errorMessage = 'The reset link has expired. Please request a new one.';
           break;
         case 'auth/too-many-requests':
           errorMessage = 'Too many attempts. Please try again later.';
@@ -90,7 +96,7 @@ export default function Login() {
       }
       toast.error(errorMessage, { id: toastId });
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -124,15 +130,15 @@ export default function Login() {
         <div className="relative rounded-2xl w-full h-full">
           <Image
             src="/images/slide1.jpg"
-            alt="Login Background"
+            alt="Change Password Background"
             fill
             className="object-contain"
             priority
           />
           <div className="absolute bottom-10 left-0 right-0">
             <div className="max-w-md mx-auto text-center text-white">
-              <h2 className="text-2xl font-bold">Welcome Back</h2>
-              <p className="text-lg mb-4">Log in to access exclusive features</p>
+              <h2 className="text-2xl font-bold">Change Your Password</h2>
+              <p className="text-lg mb-4">Enter a new password to secure your account</p>
             </div>
           </div>
         </div>
@@ -159,57 +165,47 @@ export default function Login() {
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">Log In</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Change Password</h2>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleChangePassword} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold mb-2 text-gray-600 uppercase">
-                  Email Address
+                <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase">
+                  New Password
                 </label>
                 <input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
-                  className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-semibold mb-2 text-gray-600 uppercase">
-                  Password
-                </label>
-                <input
-                  id="password"
                   type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={loading}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                  placeholder="Enter new password"
+                  disabled={isSubmitting || !oobCode}
+                  required
                 />
               </div>
-              <div className="text-right">
-                <Link
-                  href="/forget"
-                  className="text-sm text-lime-600 hover:text-lime-700 font-medium"
-                >
-                  Forgot Password?
-                </Link>
+              <div>
+                <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                  placeholder="Confirm new password"
+                  disabled={isSubmitting || !oobCode}
+                  required
+                />
               </div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={isSubmitting || !oobCode}
                 className={`w-full py-3 px-6 bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 ${
-                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                  (isSubmitting || !oobCode) ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
-                Log In
-                {loading ? (
+                Update Password
+                {isSubmitting ? (
                   <svg
                     className="animate-spin ml-2 h-5 w-5 text-white inline"
                     xmlns="http://www.w3.org/2000/svg"
@@ -251,12 +247,9 @@ export default function Login() {
 
             <div className="mt-6 text-center">
               <p className="text-gray-600">
-                Don't have an account?{' '}
-                <Link
-                  href="/signup"
-                  className="text-lime-600 hover:text-lime-700 font-medium"
-                >
-                  Sign up
+                Return to{' '}
+                <Link href="/login" className="text-lime-600 hover:text-lime-700 font-medium">
+                  Log in
                 </Link>
               </p>
             </div>

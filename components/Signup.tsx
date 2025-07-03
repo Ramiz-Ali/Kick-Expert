@@ -1,42 +1,26 @@
-
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from 'next/navigation';
-// import { auth, db } from "../lib/firebase";
-// import { createUserWithEmailAndPassword } from "firebase/auth";
-// import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import Image from "next/image";
-// import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+import Link from "next/link";
+import { FirestoreUser } from '@/types/user';
 
 export default function Signup() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  // const [secretCode, setSecretCode] = useState<string>("");
-  // const [loading, setLoading] = useState<boolean>(false);
-  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [secretCode, setSecretCode] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const slides = [
-    "/images/slide1.jpg",
-    "/images/slide2.jpg",
-    "/images/slide3.jpg",
-    "/images/slide4.jpg",
-    "/images/slide5.jpg",
-  ];
+  const ADMIN_SECRET_CODE = "ADMIN2025"; // Define your secret code here
 
-  // const ADMIN_SECRET_CODE = "ADMIN2025"; // Define your secret code here
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [slides.length]);
-
-  /*
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     if (!name.trim()) {
       toast.error('Full name is required');
       return false;
@@ -58,11 +42,11 @@ export default function Signup() {
       return false;
     }
     return true;
-  };
+  }, [name, email, password]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -73,11 +57,12 @@ export default function Signup() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      console.log("Authenticated user:", { uid: user.uid, email: user.email });
 
       // Determine role based on secret code
       const role = secretCode === ADMIN_SECRET_CODE ? "admin" : "user";
 
-      const userData = {
+      const userData: FirestoreUser = {
         uid: user.uid,
         email: user.email || "",
         name,
@@ -86,23 +71,42 @@ export default function Signup() {
       };
 
       await setDoc(doc(db, "users", user.uid), userData);
+      console.log("User data saved to Firestore:", userData);
 
       toast.success('Account created successfully!', { id: toastId });
       setTimeout(() => {
-        router.push(role === "admin" ? "/admindashboard" : "/");
+        const targetRoute = role === "admin" ? "/admindashboard" : "/";
+        console.log(`Navigating to: ${targetRoute}`);
+        router.replace(targetRoute);
       }, 1500);
     } catch (error: any) {
-      console.error("Signup Error:", error.message);
-      toast.error(error.message || 'Signup failed. Please try again.', { id: toastId });
+      console.error("Signup Error:", error.code, error.message);
+      let errorMessage = 'Signup failed. Please try again.';
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          errorMessage = 'This email is already registered.';
+          break;
+        case 'auth/invalid-email':
+          errorMessage = 'Invalid email address.';
+          break;
+        case 'auth/weak-password':
+          errorMessage = 'Password is too weak.';
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = 'Too many attempts. Please try again later.';
+          break;
+        default:
+          errorMessage = error.message || errorMessage;
+      }
+      toast.error(errorMessage, { id: toastId });
     } finally {
       setLoading(false);
     }
   };
-  */
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      {/* <Toaster
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {
@@ -123,124 +127,109 @@ export default function Signup() {
             duration: Infinity,
           },
         }}
-      /> */}
-         {/* Image Slideshow Section */}
+      />
+
+      {/* Image Section */}
       <div className="hidden lg:flex w-1/2 relative overflow-hidden h-[80vh] self-center">
         <div className="relative rounded-2xl w-full h-full">
-          {slides.map((slide, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <Image
-                src={slide}
-                alt={`Slide ${index + 1}`}
-                fill
-                className="object-contain"
-                priority={index === 0}
-              />
-            </div>
-          ))}
-          {/* <div className="absolute bottom-10 left-0 right-0">
+          <Image
+            src="/images/slide1.jpg"
+            alt="Signup Background"
+            fill
+            className="object-contain"
+            priority
+          />
+          <div className="absolute bottom-10 left-0 right-0">
             <div className="max-w-md mx-auto text-center text-white">
               <h2 className="text-2xl font-bold">Join Our Community</h2>
               <p className="text-lg mb-4">Sign up today and unlock exclusive features</p>
             </div>
-          </div> */}
-          <div className="absolute bottom-5 left-0 right-0 flex justify-center space-x-2">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-3 h-3 rounded-full ${
-                  index === currentSlide ? 'bg-lime-400' : 'bg-white bg-opacity-50'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
           </div>
         </div>
       </div>
 
+      {/* Form Section */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
-          {/* <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h1>
-            <p className="text-gray-600">Join us today and unlock amazing features</p>
-          </div> */}
-
-          <form /* onSubmit={handleSignup} */ className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              <input
-                id="name"
-                type="text"
-                placeholder="Your full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition"
-              />
+          <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+            <div className="flex items-center justify-center mb-6">
+              <div className="p-3 mr-4 bg-lime-100 rounded-full">
+                <svg
+                  className="w-6 h-6 text-lime-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">Create Account</h2>
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition"
-              />
-            </div>
-
-            {/* <div>
-              <label htmlFor="secretCode" className="block text-sm font-medium text-gray-700 mb-1">
-                Secret Code (for admin access, optional)
-              </label>
-              <input
-                id="secretCode"
-                type="text"
-                placeholder="Enter secret code if provided"
-                value={secretCode}
-                onChange={(e) => setSecretCode(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition"
-              />
-            </div> */}
-
-            <button
-              type="submit"
-              // disabled={loading}
-              className={`w-full py-3 px-4 bg-lime-600 hover:bg-lime-700 text-white font-semibold rounded-lg transition duration-300 `}
-            >
-              {/* {loading ? (
+            <form onSubmit={handleSignup} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-semibold mb-2 text-gray-600 uppercase">
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Your full name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-semibold mb-2 text-gray-600 uppercase">
+                  Email Address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-semibold mb-2 text-gray-600 uppercase">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={loading}
+                  className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
+                />
+              </div>
               
-                <span className="flex items-center justify-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full py-3 px-6 bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 ${
+                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                Sign Up
+                {loading ? (
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    className="animate-spin ml-2 h-5 w-5 text-white inline"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -259,30 +248,39 @@ export default function Signup() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Creating account...
-                </span>
-              ) : (
-                'Sign Up'
-              )} */}
-              Sign Up
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Already have an account?{' '}
-              <button
-                onClick={() => router.push('/login')}
-                className="text-lime-600 hover:text-lime-700 font-medium"
-              >
-                Log in
+                ) : (
+                  <svg
+                    className="w-5 h-5 ml-2 inline"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                    />
+                  </svg>
+                )}
               </button>
-            </p>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">
+                Already have an account?{' '}
+                <Link
+                  href="/login"
+                  className="text-lime-600 hover:text-lime-700 font-medium"
+                >
+                  Log in
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-
-   
     </div>
   );
 }

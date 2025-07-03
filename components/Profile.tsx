@@ -2,19 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-// import { auth, db } from "@/lib/firebase";
-// import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 import toast, { Toaster } from 'react-hot-toast';
 import Image from "next/image";
+import { FirestoreUser } from '@/types/user';
 
 export default function Profile() {
-  const [name, setName] = useState<string>("John Doe"); // Dummy name
-  const [email, setEmail] = useState<string>("john.doe@example.com"); // Dummy email
-  const [createdAt, setCreatedAt] = useState<string>(new Date().toISOString()); // Dummy createdAt
-  const [loading, setLoading] = useState<boolean>(false); // Set to false since no async fetching
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [createdAt, setCreatedAt] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
-  const [newName, setNewName] = useState<string>(name);
+  const [newName, setNewName] = useState<string>("");
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -28,9 +30,7 @@ export default function Profile() {
     "/images/slide9.jpg",
   ];
 
-  // Commented out Firebase data fetching
   useEffect(() => {
-    /*
     const fetchUserData = async () => {
       const user = auth.currentUser;
       if (user) {
@@ -38,8 +38,9 @@ export default function Profile() {
         try {
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
-            const data = userDoc.data();
+            const data = userDoc.data() as FirestoreUser;
             setName(data.name || "");
+            setNewName(data.name || "");
             setCreatedAt(data.createdAt || "");
           } else {
             toast.error("Profile data not found");
@@ -57,7 +58,6 @@ export default function Profile() {
     };
 
     fetchUserData();
-    */
 
     // Slideshow interval
     const interval = setInterval(() => {
@@ -66,17 +66,31 @@ export default function Profile() {
     return () => clearInterval(interval);
   }, [router, slides.length]);
 
-  const handleNameSave = () => {
-    if (newName.trim()) {
-      setName(newName.trim());
-      setIsEditingName(false);
-      toast.success("Name updated successfully");
-    } else {
+  const handleNameSave = async () => {
+    if (!newName.trim()) {
       toast.error("Name cannot be empty");
+      return;
+    }
+
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        await updateDoc(doc(db, "users", user.uid), {
+          name: newName.trim(),
+        });
+        setName(newName.trim());
+        setIsEditingName(false);
+        toast.success("Name updated successfully");
+      } catch (error) {
+        console.error("Error updating name:", error);
+        toast.error("Failed to update name");
+      }
+    } else {
+      toast.error("User not authenticated");
     }
   };
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
       toast.error("Please fill in all password fields");
       return;
@@ -89,11 +103,28 @@ export default function Profile() {
       toast.error("New password must be at least 6 characters");
       return;
     }
-    // Simulate password change (replace with actual logic)
-    toast.success("Password changed successfully");
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+
+    const user = auth.currentUser;
+    if (!user || !user.email) {
+      toast.error("User not authenticated");
+      return;
+    }
+
+    try {
+      // Reauthenticate user
+      const credential = EmailAuthProvider.credential(user.email, currentPassword);
+      await reauthenticateWithCredential(user, credential);
+
+      // Update password
+      await updatePassword(user, newPassword);
+      toast.success("Password changed successfully");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error: any) {
+      console.error("Error updating password:", error.message);
+      toast.error(error.message || "Failed to update password");
+    }
   };
 
   return (
@@ -127,8 +158,9 @@ export default function Profile() {
           {slides.map((slide, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? 'opacity-100' : 'opacity-0'
-                }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
             >
               <Image
                 src={slide}
@@ -139,21 +171,20 @@ export default function Profile() {
               />
             </div>
           ))}
-          {/* Text Overlay Container */}
           <div className="absolute bottom-10 left-0 right-0">
             <div className="max-w-md mx-auto text-center text-white">
               <h2 className="text-2xl font-bold">Your Profile</h2>
               <p className="text-lg mb-4">View and manage your account details</p>
             </div>
           </div>
-          {/* Slide Indicators */}
           <div className="absolute bottom-5 left-0 right-0 flex justify-center space-x-2">
             {slides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`w-3 h-3 rounded-full ${index === currentSlide ? 'bg-lime-400' : 'bg-white bg-opacity-50'
-                  }`}
+                className={`w-3 h-3 rounded-full ${
+                  index === currentSlide ? 'bg-lime-400' : 'bg-white bg-opacity-50'
+                }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
@@ -188,10 +219,9 @@ export default function Profile() {
               </svg>
             </div>
           ) : (
-            <div className="space-y-3">
-
+            <div className="space-y-8">
               {/* My Profile and Description */}
-              <div className="flex items-center  justify-center mb-6">
+              <div className="flex items-center justify-center mb-6">
                 <div className="p-3 mr-4 bg-lime-100 rounded-full">
                   <svg
                     className="w-6 h-6 text-lime-600"
@@ -212,7 +242,6 @@ export default function Profile() {
               </div>
 
               {/* Username with Edit Option */}
-
               <div>
                 <div className="flex items-center">
                   {isEditingName ? (
@@ -251,7 +280,6 @@ export default function Profile() {
               </div>
 
 
-
               {/* Password Change Section */}
               <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
                 <div className="flex items-center mb-8">
@@ -276,7 +304,7 @@ export default function Profile() {
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase ">Current Password</label>
+                    <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase">Current Password</label>
                     <input
                       type="password"
                       value={currentPassword}
@@ -287,13 +315,13 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase ">New Password</label>
+                    <label className="block text-sm font-semibold mb-2 text-gray-600 uppercase">New Password</label>
                     <input
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       className="w-full px-5 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-lime-400 focus:ring-2 focus:ring-lime-100 text-gray-700 placeholder-gray-400 transition duration-200"
-                      placeholder="At least 8 characters"
+                      placeholder="At least 6 characters"
                     />
                   </div>
 
@@ -313,12 +341,22 @@ export default function Profile() {
                     className="w-full py-3 px-6 bg-gradient-to-r from-lime-400 to-lime-500 hover:from-lime-500 hover:to-lime-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
                   >
                     Update Password
-                    <svg className="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                    <svg
+                      className="w-5 h-5 ml-2 inline"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                      />
                     </svg>
                   </button>
                 </div>
-
               </div>
             </div>
           )}
